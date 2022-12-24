@@ -55,6 +55,16 @@ namespace pulsar
 		m_EventFunc = eventFunction;
 	}
 
+	void Window::hideMouse()
+	{
+		SDL_ShowCursor(SDL_DISABLE);
+	}
+
+	void Window::showMouse()
+	{
+		SDL_ShowCursor(SDL_ENABLE);
+	}
+
 	void Window::display()
 	{
 		while (!quit())
@@ -66,6 +76,7 @@ namespace pulsar
 				if (m_Event.type == SDL_QUIT)
 				{
 					exit();
+					return;
 				}
 				else if (m_EventFunc != nullptr)
 				{

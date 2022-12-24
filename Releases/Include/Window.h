@@ -26,6 +26,8 @@ namespace pulsar
 		void setCalculations(std::function<void()> calcFunction);
 		void setRenders(std::function<void()> renderFunction);
 		void setEvents(std::function<void(const SDL_Event&)> eventFunction);
+		void hideMouse();
+		void showMouse();
 		void display();
 		void exit();
 

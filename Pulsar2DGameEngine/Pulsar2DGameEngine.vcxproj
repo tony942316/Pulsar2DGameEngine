@@ -102,7 +102,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -140,7 +140,7 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -173,7 +173,7 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -211,7 +211,7 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -229,10 +229,13 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Headers\Pulsar.h" />
     <ClInclude Include="src\Headers\Window.h" />
+    <ClInclude Include="src\Headers\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
