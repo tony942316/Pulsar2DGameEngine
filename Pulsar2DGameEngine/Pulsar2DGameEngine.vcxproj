@@ -102,17 +102,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>NONE%(Outputs)</Outputs>
-      <Command>Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)bin\Include</Command>
+      <Command>Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)bin\Include
+Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
+Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
+Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -136,10 +140,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>
@@ -147,8 +151,10 @@
     <CustomBuildStep>
       <Outputs>NONE%(Outputs)</Outputs>
       <Command>Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)bin\Include
-Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)release\Include
-Xcopy /Y $(SolutionDir)bin\$(Platform)Release\Pulsar2DGameEngine\Pulsar2DGameEngine.lib $(SolutionDir)release\Libs\$(Platform)\</Command>
+Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
+Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
+Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -167,17 +173,21 @@ Xcopy /Y $(SolutionDir)bin\$(Platform)Release\Pulsar2DGameEngine\Pulsar2DGameEng
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>NONE%(Outputs)</Outputs>
-      <Command>Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)bin\Include</Command>
+      <Command>Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)bin\Include
+Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
+Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
+Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -201,10 +211,10 @@ Xcopy /Y $(SolutionDir)bin\$(Platform)Release\Pulsar2DGameEngine\Pulsar2DGameEng
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Equinox3.lib</AdditionalDependencies>
+      <AdditionalDependencies>Equinox3.lib;SDL2.lib;SDL2main.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>
@@ -212,8 +222,10 @@ Xcopy /Y $(SolutionDir)bin\$(Platform)Release\Pulsar2DGameEngine\Pulsar2DGameEng
     <CustomBuildStep>
       <Outputs>NONE%(Outputs)</Outputs>
       <Command>Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)bin\Include
-Xcopy /E /Y /I $(ProjectDir)src\Headers $(SolutionDir)release\Include
-Xcopy /Y $(SolutionDir)bin\$(Platform)Release\Pulsar2DGameEngine\Pulsar2DGameEngine.lib $(SolutionDir)release\Libs\$(Platform)\</Command>
+Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
+Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
+Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

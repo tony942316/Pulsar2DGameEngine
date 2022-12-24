@@ -102,6 +102,15 @@
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)$(Configuration)\Pulsar2DGameEngine\</AdditionalLibraryDirectories>
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Moving DLLs</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>NONE%(Outputs)</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -124,6 +133,15 @@
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)$(Configuration)\Pulsar2DGameEngine\</AdditionalLibraryDirectories>
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Moving DLLs</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>NONE%(Outputs)</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -141,6 +159,15 @@
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)$(Configuration)\Pulsar2DGameEngine\</AdditionalLibraryDirectories>
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Moving DLLs</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>NONE%(Outputs)</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -163,6 +190,15 @@
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)$(Configuration)\Pulsar2DGameEngine\</AdditionalLibraryDirectories>
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Moving DLLs</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>NONE%(Outputs)</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />

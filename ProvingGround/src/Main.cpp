@@ -6,8 +6,10 @@ int main()
 {
 	std::cout << "Start" << std::endl;
 
-	pulsar::Window win;
-	win.testing();
+	eqx::Log::setLevel(eqx::Log::Level::info);
+
+	pulsar::Window win("Window", 1600, 1000);
+	win.display();
 
 	std::cout << "End" << std::endl;
 }
