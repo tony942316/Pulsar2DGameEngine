@@ -229,11 +229,13 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Headers\Entity.h" />
     <ClInclude Include="src\Headers\Pulsar.h" />
     <ClInclude Include="src\Headers\Window.h" />
     <ClInclude Include="src\Headers\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>

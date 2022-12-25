@@ -18,9 +18,9 @@ private:
 	static void calculate();
 	static void handleEvent(const SDL_Event& e);
 
-	eqx::Point<int> m_MouseLocation;
+	eqx::Point<int> m_MouseLocation, m_MouseDown, m_MouseUp;
 	pulsar::Window m_Window;
-	pulsar::Texture m_MouseTexture;
+	pulsar::Entity m_Mouse, m_Unit;
 };
 
 int main()
@@ -36,8 +36,10 @@ int main()
 
 Game::Game()
 	:
-	m_Window("Game Window", 900, 600),
-	m_MouseTexture(m_Window, "assets/Mouse.png")
+	m_Window("Game Window", 1600, 1200),
+	m_Mouse(m_Window, "assets/Mouse.png", { 0.0, 0.0, 50.0, 50.0 }, 900.0),
+	m_Unit(m_Window, "assets/Enemy.png", { 500.0, 500.0, 100.0, 100.0 }, 500.0),
+	m_MouseDown({ 500, 500 })
 {
 
 }
@@ -50,7 +52,7 @@ Game& Game::getInstance()
 
 void Game::run()
 {
-	Game::getInstance().m_Window.hideMouse();
+	//Game::getInstance().m_Window.hideMouse();
 	Game::getInstance().m_Window.setCalculations(calculate);
 	Game::getInstance().m_Window.setRenders(render);
 	Game::getInstance().m_Window.setEvents(handleEvent);
@@ -59,12 +61,16 @@ void Game::run()
 
 void Game::render()
 {
-	Game::getInstance().m_MouseTexture.render(Game::getInstance().m_MouseLocation);
+	//Game::getInstance().m_Mouse.render();
+	Game::getInstance().m_Unit.render();
 }
 
 void Game::calculate()
 {
-	
+	double dt = Game::getInstance().m_Window.getDeltaTime();
+	Game::getInstance().m_Unit.setTarget(Game::getInstance().m_MouseDown);
+	if (!Game::getInstance().m_Unit.targetReached(Game::getInstance().m_MouseDown))
+		Game::getInstance().m_Unit.move(dt);
 }
 
 void Game::handleEvent(const SDL_Event& e)
@@ -73,5 +79,15 @@ void Game::handleEvent(const SDL_Event& e)
 	{
 		Game::getInstance().m_MouseLocation.x = e.motion.x;
 		Game::getInstance().m_MouseLocation.y = e.motion.y;
+	}
+	else if (e.type == SDL_MOUSEBUTTONDOWN)
+	{
+		Game::getInstance().m_MouseDown.x = e.button.x;
+		Game::getInstance().m_MouseDown.y = e.button.y;
+	}
+	else if (e.type == SDL_MOUSEBUTTONUP)
+	{
+		Game::getInstance().m_MouseUp.x = e.button.x;
+		Game::getInstance().m_MouseUp.y = e.button.y;
 	}
 }

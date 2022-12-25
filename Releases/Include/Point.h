@@ -187,6 +187,26 @@ namespace eqx
 		T x, y;
 	};
 
+	template <typename T>
+	bool equals(const Point<T>& point1, const Point<T>& point2, long double accuracy = 0.001)
+	{
+		if (std::is_integral<T>::value)
+		{
+			return (point1.x == point2.x) && (point1.y == point2.y);
+		}
+		else if (std::is_floating_point<T>::value)
+		{
+			return
+				std::fabs(point1.x - point2.x) < static_cast<T>(accuracy) &&
+				std::fabs(point1.y - point2.y) < static_cast<T>(accuracy);
+		}
+		else
+		{
+			eqx::Log::log(eqx::Log::Level::error, "This case should never be reached", eqx::Log::Type::unreachableCodeError);
+			return false;
+		}
+	}
+
 	/**
 	 * @brief Computes The Distance Between Two Points
 	 * 
