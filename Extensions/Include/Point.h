@@ -133,7 +133,7 @@ namespace eqx
 
 		/**
 		 * @brief This.x == Other.x, This.y == Other.y UNLESS FLOATING POINT
-		 * @brief If Floating Point Difference Must Be Less Than 0.001
+		 * @brief If Floating Point, Difference Must Be Less Than 0.001
 		 * 
 		 * @param other The Same Type Point We Compare Against
 		 * 
@@ -141,26 +141,12 @@ namespace eqx
 		 */
 		bool operator== (const Point<T>& other) const
 		{
-			if (std::is_integral<T>::value)
-			{
-				return (this->x == other.x) && (this->y == other.y);
-			}
-			else if (std::is_floating_point<T>::value)
-			{
-				return
-					std::fabs(this->x - other.x) < static_cast<T>(0.001) &&
-					std::fabs(this->y - other.y) < static_cast<T>(0.001);
-			}
-			else
-			{
-				eqx::Log::log(eqx::Log::Level::error, "This case should never be reached", eqx::Log::Type::unreachableCodeError);
-				return false;
-			}
+			return equals(*this, other);
 		}
 
 		/**
 		 * @brief This.x != Other.x, This.y != Other.y UNLESS FLOATING POINT
-		 * @brief If Floating Point Difference Must Be Greater Than Or Equal To 0.001
+		 * @brief If Floating Point, Difference Must Be Greater Than Or Equal To 0.001
 		 *
 		 * @param other The Same Type Point We Compare Against
 		 *
@@ -187,8 +173,18 @@ namespace eqx
 		T x, y;
 	};
 
+	/**
+	 * @brief point1.x == point2.x, point1.y == point2.y UNLESS FLOATING POINT
+	 * @brief If Floating Point, Difference Must Be Less Than error
+	 *
+	 * @param point1 First Point
+	 * @param point2 Second Point
+	 * @param error Amount Of Inaccuracy Permissible For Floating Point Types
+	 *
+	 * @returns True If Points Are Equivalent
+	 */
 	template <typename T>
-	bool equals(const Point<T>& point1, const Point<T>& point2, long double accuracy = 0.001)
+	bool equals(const Point<T>& point1, const Point<T>& point2, double error = 0.001)
 	{
 		if (std::is_integral<T>::value)
 		{
@@ -197,8 +193,8 @@ namespace eqx
 		else if (std::is_floating_point<T>::value)
 		{
 			return
-				std::fabs(point1.x - point2.x) < static_cast<T>(accuracy) &&
-				std::fabs(point1.y - point2.y) < static_cast<T>(accuracy);
+				std::fabs(point1.x - point2.x) < static_cast<T>(error) &&
+				std::fabs(point1.y - point2.y) < static_cast<T>(error);
 		}
 		else
 		{
@@ -219,9 +215,9 @@ namespace eqx
 	T distance(const Point<T>& point1, const Point<T>& point2)
 	{
 		errno = 0;
-		long double 
-			dx = static_cast<long double>(eqx::distance(point1.x, point2.x)),
-			dy = static_cast<long double>(eqx::distance(point1.y, point2.y)),
+		double 
+			dx = static_cast<double>(eqx::distance(point1.x, point2.x)),
+			dy = static_cast<double>(eqx::distance(point1.y, point2.y)),
 			result = std::hypot(dx, dy);
 		if (errno == ERANGE ||
 			result > std::numeric_limits<T>::max() ||
@@ -255,5 +251,26 @@ namespace eqx
 		result.x = eqx::distance(origin, point) == static_cast<T>(0) ? static_cast<T>(0) : point.x / distance(origin, point);
 		result.y = eqx::distance(origin, point) == static_cast<T>(0) ? static_cast<T>(0) : point.y / distance(origin, point);
 		return result;
+	}
+
+	/**
+	 * @brief Compute The Angle Of A Point In Degrees From The Origin (0, 0)
+	 * 
+	 * @param point Point The Angle Is Computed From
+	 * 
+	 * @returns Angle In Degrees
+	 */
+	template <typename T>
+	double angle(const Point<T>& point)
+	{
+		Point<T> normPoint = eqx::normalize(point);
+		std::pair<double, double> 
+			sinVals = eqx::arcsin(normPoint.y),
+			cosVals = eqx::arccos(normPoint.x);
+
+		return
+			(eqx::equals(sinVals.first, cosVals.first) ||
+			eqx::equals(sinVals.first, cosVals.second)) ?
+			sinVals.first : sinVals.second;
 	}
 }

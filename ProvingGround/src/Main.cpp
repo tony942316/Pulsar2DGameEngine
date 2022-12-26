@@ -36,7 +36,7 @@ int main()
 
 Game::Game()
 	:
-	m_Window("Game Window", 1600, 1200),
+	m_Window("Game Window", 1200, 700),
 	m_Mouse(m_Window, "assets/Mouse.png", { 0.0, 0.0, 50.0, 50.0 }, 900.0),
 	m_Unit(m_Window, "assets/Enemy.png", { 500.0, 500.0, 100.0, 100.0 }, 500.0),
 	m_MouseDown({ 500, 500 })
