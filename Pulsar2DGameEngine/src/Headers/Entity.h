@@ -20,6 +20,7 @@ namespace pulsar
 		const Texture& getTexture() const;
 		double getSpeed() const;
 		eqx::Point<double> getDirection() const;
+		bool targetReached() const;
 		bool targetReached(eqx::Point<double> point) const;
 
 		void setLocation(eqx::Point<double> point);
@@ -35,7 +36,7 @@ namespace pulsar
 		const Window& m_Window;
 		Texture m_Texture;
 		eqx::Rectangle<double> m_DrawBox;
-		eqx::Point<double> m_Direction;
+		eqx::Point<double> m_Direction, m_Target;
 		double m_Speed;
 	};
 }

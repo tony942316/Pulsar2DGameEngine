@@ -4,6 +4,8 @@
 
 #include <EquinoxSTD.h>
 
+#include "Mouse.h"
+
 namespace pulsar
 {
 	Window::Window(const std::string& name, int width, int height, Window::Package package)
@@ -73,6 +75,7 @@ namespace pulsar
 
 			while (pollEvent())
 			{
+				Mouse::handleEvent(m_Event);
 				if (m_Event.type == SDL_QUIT)
 				{
 					exit();

@@ -16,6 +16,7 @@ namespace pulsar
 		m_Texture(window, filePath),
 		m_DrawBox(drawBox),
 		m_Direction({ 0.0, 0.0 }),
+		m_Target({ 0.0, 0.0 }),
 		m_Speed(speed)
 	{
 
@@ -46,9 +47,14 @@ namespace pulsar
 		return m_Direction;
 	}
 
+	bool Entity::targetReached() const
+	{
+		return targetReached(m_Target);
+	}
+
 	bool Entity::targetReached(eqx::Point<double> point) const
 	{
-		if (eqx::equals(m_DrawBox.getCenterPoint(), point, 4.0))
+		if (eqx::equals(m_DrawBox.getLocation(), point, 4.0))
 		{
 			return true;
 		}
@@ -92,8 +98,8 @@ namespace pulsar
 
 	void Entity::setTarget(eqx::Point<double> point)
 	{
-		m_Direction.x = point.x - m_DrawBox.getCenterPoint().x;
-		m_Direction.y = point.y - m_DrawBox.getCenterPoint().y;
+		m_Target = point;
+		setDirection(point - m_DrawBox.getLocation());
 	}
 
 	void Entity::setDirection(eqx::Point<double> point)
