@@ -22,6 +22,27 @@ namespace pulsar
 
 	}
 
+	Entity::Entity(const Entity& other)
+		:
+		m_Window(other.m_Window),
+		m_Texture(other.m_Texture),
+		m_DrawBox(other.m_DrawBox),
+		m_Direction(other.m_Direction),
+		m_Target(other.m_Target),
+		m_Speed(other.m_Speed)
+	{
+		
+	}
+
+	void Entity::operator=(const Entity& other)
+	{
+		m_Texture = other.m_Texture;
+		m_DrawBox = other.m_DrawBox;
+		m_Direction = other.m_Direction;
+		m_Target = other.m_Target;
+		m_Speed = other.m_Speed;
+	}
+
 	void Entity::render() const
 	{
 		m_Texture.render(m_DrawBox);

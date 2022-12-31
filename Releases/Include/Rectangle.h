@@ -124,7 +124,7 @@ namespace eqx
 			}
 			else
 			{
-				return eqx::Point<T>(x + w, y);
+				return eqx::Point<T>(x, y + h);
 			}
 		}
 
@@ -220,10 +220,10 @@ namespace eqx
 	template <typename U>
 	bool intersect(const Rectangle<U>& rect1, const Rectangle<U>& rect2)
 	{
-		if (rect1.getTopLeftPoint().x > rect2.getBottomRightPoint().x ||
-			rect1.getBottomRightPoint().x < rect2.getTopLeftPoint().x ||
-			rect1.getTopLeftPoint().y > rect2.getBottomRightPoint().y ||
-			rect1.getBottomRightPoint().y > rect2.getTopLeftPoint().y)
+		if (rect1.getBottomRightPoint().x < rect2.getBottomLeftPoint().x ||
+			rect1.getBottomLeftPoint().x > rect2.getBottomRightPoint().x ||
+			rect1.getBottomLeftPoint().y < rect2.getTopLeftPoint().y ||
+			rect1.getTopLeftPoint().y > rect2.getBottomLeftPoint().y)
 		{
 			return false;
 		}

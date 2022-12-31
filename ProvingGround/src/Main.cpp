@@ -60,6 +60,10 @@ void Game::run()
 void Game::render()
 {
 	//Game::getInstance().m_Mouse.render();
+	pulsar::Entity e(Game::getInstance().m_Unit);
+	e = Game::getInstance().m_Unit;
+	e.setLocation({ 100.0, 100.0 });
+	e.render();
 	Game::getInstance().m_Unit.render();
 }
 
@@ -74,6 +78,6 @@ void Game::handleEvent(const SDL_Event& e)
 {
 	if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_RIGHT)
 	{
-		Game::getInstance().m_Unit.setTarget(Mouse::RightClickDownLocation);
+		Game::getInstance().m_Unit.setTarget(pulsar::Mouse::RightClickDownLocation);
 	}
 }

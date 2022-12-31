@@ -16,6 +16,9 @@ namespace pulsar
 		m_Window(window),
 		m_Width(0),
 		m_Height(0),
+		m_Red(255),
+		m_Green(255),
+		m_Blue(255),
 		m_Angle(0.0),
 		m_Filepath(filePath),
 		m_SdlTexture(nullptr),
@@ -31,14 +34,41 @@ namespace pulsar
 		:
 		m_Window(other.m_Window),
 		m_Filepath(other.m_Filepath),
-		m_SdlTexture(nullptr)
+		m_SdlTexture(nullptr),
+		m_Flip(other.m_Flip),
+		m_Angle(other.m_Angle),
+		m_Width(other.m_Width),
+		m_Height(other.m_Height),
+		m_Red(other.m_Red),
+		m_Green(other.m_Green),
+		m_Blue(other.m_Blue)
 	{
-		loadFile(m_Filepath);
+		if (m_Filepath != "")
+			loadFile(m_Filepath);
+		m_RotationPoint = other.m_RotationPoint;
+		m_SourceRect = other.m_SourceRect;
+		modColor(m_Red, m_Green, m_Blue);
 	}
 
 	Texture::~Texture()
 	{
 		SDL_DestroyTexture(m_SdlTexture);
+	}
+
+	void Texture::operator=(const Texture& other)
+	{
+		m_Filepath = other.m_Filepath;
+		m_Flip = other.m_Flip;
+		m_Angle = other.m_Angle;
+		m_Height = other.m_Height;
+		m_Width = other.m_Width;
+		m_Red = other.m_Red;
+		m_Green = other.m_Green;
+		m_Blue = other.m_Blue;
+		if (m_Filepath != "")
+			loadFile(m_Filepath);
+		m_RotationPoint = other.m_RotationPoint;
+		m_SourceRect = other.m_SourceRect;
 	}
 
 	bool Texture::loadFile(const std::string& filePath)
@@ -112,6 +142,10 @@ namespace pulsar
 			std::cout << "Texture Render Error! SDL Error: " << SDL_GetError() << std::endl;
 			return false;
 		}
+
+		m_Red = r;
+		m_Green = g;
+		m_Blue = b;
 
 		return true;
 	}

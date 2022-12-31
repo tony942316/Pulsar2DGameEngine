@@ -14,6 +14,8 @@ namespace pulsar
 		Texture(const Texture& other);
 		~Texture();
 
+		void operator= (const Texture& other);
+
 		bool loadFile(const std::string& filePath);
 		template <typename T>
 		bool render(const eqx::Point<T>& point, float scale = 1.0f) const
@@ -75,6 +77,7 @@ namespace pulsar
 		SDL_RendererFlip m_Flip;
 		double m_Angle;
 		int m_Width, m_Height;
+		Uint8 m_Red, m_Green, m_Blue;
 		eqx::Point<int> m_RotationPoint;
 		eqx::Rectangle<int> m_SourceRect;
 	};

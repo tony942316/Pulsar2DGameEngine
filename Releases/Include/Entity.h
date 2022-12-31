@@ -14,6 +14,9 @@ namespace pulsar
 		Entity(const Window& window);
 		Entity(const Window& window, const std::string& filePath,
 			eqx::Rectangle<double> drawBox, double speed);
+		Entity(const Entity& other);
+
+		void operator= (const Entity& other);
 
 		void render() const;
 		const eqx::Rectangle<double>& getLocation() const;
