@@ -15,19 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Headers\Window.h">
+    <ClInclude Include="src\Headers\pul_Window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Headers\Texture.h">
+    <ClInclude Include="src\Headers\pul_Texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Headers\Pulsar.h">
+    <ClInclude Include="src\Headers\Pulsar.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Headers\Entity.h">
+    <ClInclude Include="src\Headers\pul_Entity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Headers\Mouse.h">
+    <ClInclude Include="src\Headers\pul_Mouse.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

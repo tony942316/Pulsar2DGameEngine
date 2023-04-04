@@ -1,46 +1,22 @@
-#include "Entity.h"
+#include "pul_Entity.hpp"
 
-namespace pulsar
+namespace pul
 {
-	Entity::Entity(const Window& window)
+	Entity::Entity()
 		:
-		Entity(window, "", { 0, 0, 0, 0 }, 0.0)
+		Entity(nullptr, "", { 0, 0, 0, 0 }, 0.0)
 	{
-
 	}
 
-	Entity::Entity(const Window& window, const std::string& filePath,
+	Entity::Entity(SDL_Renderer* renderer, std::string_view filePath,
 		eqx::Rectangle<double> drawBox, double speed)
 		:
-		m_Window(window),
-		m_Texture(window, filePath),
+		m_Texture(renderer, filePath),
 		m_DrawBox(drawBox),
 		m_Direction({ 0.0, 0.0 }),
 		m_Target({ 0.0, 0.0 }),
 		m_Speed(speed)
 	{
-
-	}
-
-	Entity::Entity(const Entity& other)
-		:
-		m_Window(other.m_Window),
-		m_Texture(other.m_Texture),
-		m_DrawBox(other.m_DrawBox),
-		m_Direction(other.m_Direction),
-		m_Target(other.m_Target),
-		m_Speed(other.m_Speed)
-	{
-		
-	}
-
-	void Entity::operator=(const Entity& other)
-	{
-		m_Texture = other.m_Texture;
-		m_DrawBox = other.m_DrawBox;
-		m_Direction = other.m_Direction;
-		m_Target = other.m_Target;
-		m_Speed = other.m_Speed;
 	}
 
 	void Entity::render() const
@@ -85,6 +61,12 @@ namespace pulsar
 		}
 	}
 
+	void Entity::setTexture(SDL_Renderer* renderer, std::string_view filePath)
+	{
+		m_Texture.setRenderer(renderer);
+		m_Texture.loadFile(filePath);
+	}
+
 	void Entity::setLocation(eqx::Point<double> point)
 	{
 		m_DrawBox.x = point.x;
@@ -113,8 +95,11 @@ namespace pulsar
 
 	void Entity::move(double dt)
 	{
-		m_DrawBox.x += eqx::normalize(m_Direction).x * m_Speed * dt;
-		m_DrawBox.y += eqx::normalize(m_Direction).y * m_Speed * dt;
+		if (m_Direction != eqx::Point<double>(0.0, 0.0))
+		{
+			m_DrawBox.x += eqx::normalize(m_Direction).x * m_Speed * dt;
+			m_DrawBox.y += eqx::normalize(m_Direction).y * m_Speed * dt;
+		}
 	}
 
 	void Entity::setTarget(eqx::Point<double> point)

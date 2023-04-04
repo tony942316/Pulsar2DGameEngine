@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <EquinoxSTD.h>
+#include <EquinoxSTD.hpp>
 
 #include "Texture.h"
 

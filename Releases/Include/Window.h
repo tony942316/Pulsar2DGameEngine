@@ -6,7 +6,7 @@
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
-#include <EquinoxSTD.h>
+#include <EquinoxSTD.hpp>
 
 namespace pulsar
 {

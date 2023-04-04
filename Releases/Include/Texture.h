@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EquinoxSTD.h>
+#include <EquinoxSTD.hpp>
 
 #include "Window.h"
 

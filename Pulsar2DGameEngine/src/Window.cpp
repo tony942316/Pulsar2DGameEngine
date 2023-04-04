@@ -1,316 +1,152 @@
-#include "Window.h"
+#include "pul_Window.hpp"
 
 #include <iostream>
 
-#include <EquinoxSTD.h>
+#include "pul_Mouse.hpp"
 
-#include "Mouse.h"
-
-namespace pulsar
+namespace pul
 {
-	Window::Window(const std::string& name, int width, int height, Window::Package package)
+	Window::Window(std::string_view name, int width, int height)
 		:
-		m_Package(package),
+		m_Name(name),
+		m_Width(width),
+		m_Height(height),
+		m_FrameCount(0ULL),
+		m_LastFrameTime(0.0),
+		m_EventFunction([](const SDL_Event&) {}),
+		m_UpdateFunction([]() {}),
+		m_RenderFunction([]() {}),
 		m_Window(nullptr),
-		m_Renderer(nullptr),
-		m_Gamepad(nullptr),
-		m_ScreenWidth(width),
-		m_ScreenHeight(height),
-		m_FrameCount(0ll),
-		m_LastFrameTime(0ll),
-		m_AvgFrameTime(0.0),
-		m_TotalFrameTime(0.0),
-		m_Exit(false),
-		m_CalcFunc(nullptr),
-		m_RenderFunc(nullptr),
-		m_EventFunc(nullptr),
-		m_WindowName(name)
+		m_Renderer(nullptr)
 	{
-		m_Packages[Window::Package::Standard] = std::pair<int, int>(SDL_WINDOW_SHOWN, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-		m_Packages[Window::Package::NoVsync] = std::pair<int, int>(SDL_WINDOW_SHOWN, SDL_RENDERER_ACCELERATED);
-
-		if (!init())
+		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
-			eqx::Log::log(eqx::Log::Level::error, std::string("Init Failure!"), eqx::Log::Type::runtimeError);
+			printSDLError();
 		}
+
+		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+		{
+			printError("Warning: Linear texture filtering not enabled!");
+		}
+
+		m_Window = SDL_CreateWindow(m_Name.c_str(), SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED, m_Width, m_Height, SDL_WINDOW_HIDDEN);
+		if (m_Window == NULL)
+		{
+			printSDLError();
+		}
+
+		m_Renderer = SDL_CreateRenderer(m_Window, -1,
+			SDL_RENDERER_ACCELERATED);
+		if (m_Renderer == NULL)
+		{
+			printSDLError();
+		}
+
+		SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0x00);
 	}
 
 	Window::~Window()
 	{
-		if (!m_Exit)
-			close();
-	}
-
-
-	void Window::setCalculations(std::function<void()> calcFunction)
-	{
-		m_CalcFunc = calcFunction;
-	}
-
-	void Window::setRenders(std::function<void()> renderFunction)
-	{
-		m_RenderFunc = renderFunction;
-	}
-
-	void Window::setEvents(std::function<void(const SDL_Event&)> eventFunction)
-	{
-		m_EventFunc = eventFunction;
-	}
-
-	void Window::hideMouse()
-	{
-		SDL_ShowCursor(SDL_DISABLE);
-	}
-
-	void Window::showMouse()
-	{
-		SDL_ShowCursor(SDL_ENABLE);
-	}
-
-	void Window::display()
-	{
-		while (!quit())
-		{
-			m_FrameTimer.start();
-
-			while (pollEvent())
-			{
-				Mouse::handleEvent(m_Event);
-				if (m_Event.type == SDL_QUIT)
-				{
-					exit();
-					return;
-				}
-				else if (m_EventFunc != nullptr)
-				{
-					m_EventFunc(getEvent());
-				}
-			}
-
-			if (m_CalcFunc != nullptr)
-			{
-				m_CalcFunc();
-			}
-
-			clear();
-
-			if (m_RenderFunc != nullptr)
-			{
-				m_RenderFunc();
-			}
-
-			show();
-
-			m_FrameTimer.stop();
-
-			m_LastFrameTime = m_FrameTimer.getTimeMicro();
-			m_FrameCount++;
-			m_TotalFrameTime += static_cast<double>(m_FrameTimer.getTimeMicro());
-			m_AvgFrameTime = m_TotalFrameTime / m_FrameCount;
-		}
-	}
-
-	void Window::exit()
-	{
-		m_Exit = true;
-		close();
-	}
-
-	SDL_Window* Window::getWindow() const
-	{
-		return m_Window;
-	}
-
-	SDL_Renderer* Window::getRenderer() const
-	{
-		return m_Renderer;
-	}
-
-	int Window::getWidth() const
-	{
-		return m_ScreenWidth;
-	}
-
-	int Window::getHeight() const
-	{
-		return m_ScreenHeight;
-	}
-
-	double Window::getAvgFrameTime() const
-	{
-		return m_AvgFrameTime;
-	}
-
-	double Window::getAvgFps() const
-	{
-		return 1.0 / m_AvgFrameTime;
-	}
-
-	double Window::getCurrentFps() const
-	{
-		return 1.0 / (m_LastFrameTime / 1'000'000.0);
-	}
-
-	long long Window::getLastFrameTime() const
-	{
-		return m_LastFrameTime;
-	}
-
-	double Window::getDeltaTime() const
-	{
-		return m_LastFrameTime / 1'000'000.0;
-	}
-
-	void Window::printFrameInfo() const
-	{
-		std::cout << "=====================" << std::endl;
-		std::cout << "Average FPS: " << getAvgFps() << std::endl;
-		std::cout << "Average Frame Time: " << m_AvgFrameTime << std::endl;
-		std::cout << "Most Recent Frame Time: " << m_LastFrameTime << std::endl;
-		std::cout << "Current Frame Rate: " << getCurrentFps() << std::endl;
-		std::cout << "=====================" << std::endl;
-	}
-
-	int Window::pollEvent()
-	{
-		return SDL_PollEvent(&m_Event);
-	}
-
-	SDL_Event Window::getEvent() const
-	{
-		return m_Event;
-	}
-
-	bool Window::quit()
-	{
-		if (m_Exit)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	void Window::clear()
-	{
-		SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0x00);
-		SDL_RenderClear(m_Renderer);
+		SDL_Quit();
 	}
 
 	void Window::show()
 	{
-		SDL_RenderPresent(m_Renderer);
-	}
+		using namespace eqx::shortTimeUnits;
 
-	bool Window::init()
-	{
-		if (!initSDL())
-			return false;
+		SDL_Event e;
+		auto quit = false;
+		auto singleFrameTimer = eqx::StopWatch();
 
-		if (!createWindow())
-			return false;
+		m_FrameTimer.start();
 
-		if (!createRenderer())
-			return false;
-
-		return true;
-	}
-
-	bool Window::initSDL()
-	{
-		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO) < 0)
+		SDL_ShowWindow(m_Window);
+		while (!quit)
 		{
-			eqx::Log::log(eqx::Log::Level::error, std::string("SDL could not initialize! SDL Error: ") + SDL_GetError(), eqx::Log::Type::runtimeError);
-			return false;
-		}
-
-		/*
-		// Initialize SDL_ttf
-		if (TTF_Init() == -1)
-		{
-			std::cout << "SDL_ttf could not initialize! TTF Error: " << TTF_GetError() << std::endl;
-			return false;
-		}*/
-
-		/*
-		// Initialize SDL_mixer
-		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-		{
-			std::cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
-			return false;
-		}*/
-
-		/*
-		// Initialize SDL_image
-		int imgFlags = IMG_INIT_PNG;
-		if (!(IMG_Init(imgFlags) & imgFlags))
-		{
-			std::cout << "SDL_image could not initialize! SDL_image Error: " << SDL_GetError() << std::endl;
-			return false;
-		}*/
-
-		// Set texture filtering to linear
-		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-		{
-			eqx::Log::log(eqx::Log::Level::warning, std::string("Warning: Linear texture filtering not enabled!"));
-		}
-
-		if (SDL_NumJoysticks() < 1)
-		{
-			eqx::Log::log(eqx::Log::Level::info, std::string("No joysticks connected!"), eqx::Log::Type::info);
-		}
-		else
-		{
-			m_Gamepad = SDL_GameControllerOpen(0);
-			if (m_Gamepad == NULL)
+			singleFrameTimer.start();
+			while (SDL_PollEvent(&e))
 			{
-				eqx::Log::log(eqx::Log::Level::warning, std::string("Unable to open game controller! SDL Error: ") + SDL_GetError(), eqx::Log::Type::runtimeWarning);
-				return false;
+				if (e.type == SDL_QUIT)
+				{
+					quit = true;
+				}
+				else
+				{
+					Mouse::handleEvent(e);
+					m_EventFunction(e);
+				}
 			}
+
+			m_UpdateFunction();
+
+			SDL_RenderClear(m_Renderer);
+			m_RenderFunction();
+			SDL_RenderPresent(m_Renderer);
+
+			m_FrameCount++;
+			m_LastFrameTime = 
+				singleFrameTimer.readTime<tu_us>() / 1'000'000.0;
 		}
-
-
-		return true;
-	}
-
-	bool Window::createWindow()
-	{
-		m_Window = SDL_CreateWindow(m_WindowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			m_ScreenWidth, m_ScreenHeight, m_Packages[m_Package].first);
-		if (m_Window == NULL)
-		{
-			eqx::Log::log(eqx::Log::Level::error, std::string("Window could not be created! SDL Error: ") + SDL_GetError(), eqx::Log::Type::runtimeError);
-			return false;
-		}
-
-		return true;
-	}
-
-	bool Window::createRenderer()
-	{
-		m_Renderer = SDL_CreateRenderer(m_Window, -1, m_Packages[m_Package].second);
-		if (m_Renderer == NULL)
-		{
-			eqx::Log::log(eqx::Log::Level::error, std::string("Renderer could not be created! SDL Error: ") + SDL_GetError(), eqx::Log::Type::runtimeError);
-			return false;
-		}
-
-		SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0x00);
-
-		return true;
-	}
-
-	void Window::close()
-	{
-		if (m_Gamepad != nullptr)
-			SDL_GameControllerClose(m_Gamepad);
 
 		SDL_DestroyRenderer(m_Renderer);
 		SDL_DestroyWindow(m_Window);
+	}
 
-		//TTF_Quit();
-		//Mix_Quit();
-		//IMG_Quit();
-		SDL_Quit();
+	void Window::setEventFunction(
+		const std::function<void(const SDL_Event&)>& func)
+	{
+		m_EventFunction = func;
+	}
+
+	void Window::setUpdateFunction(const std::function<void(void)>& func)
+	{
+		m_UpdateFunction = func;
+	}
+
+	void Window::setRenderFunction(const std::function<void(void)>& func)
+	{
+		m_RenderFunction = func;
+	}
+
+	double Window::getDeltaTime() const
+	{
+		return m_LastFrameTime;
+	}
+
+	SDL_Renderer* Window::getRenderer()
+	{
+		return m_Renderer;
+	}
+
+	std::string Window::getFPSInfo()
+	{
+		using namespace eqx::shortTimeUnits;
+		auto avgFT = m_FrameTimer.readTime<tu_us>() / m_FrameCount;
+		auto avgFPS = 1'000'000.0 / avgFT;
+		auto result = std::string("");
+
+		m_FrameCount = 0ULL;
+		m_FrameTimer.start();
+
+		result += "=====================\n";
+		result += "Average Frame Time: ";
+		result += std::to_string(avgFT);
+		result += "\n";
+		result += "Average FPS: ";
+		result += std::to_string(avgFPS);
+		result += "\n";
+		result += "=====================\n";
+		return result;
+	}
+
+	void Window::printSDLError() const
+	{
+		std::cout << SDL_GetError() << std::endl;
+	}
+
+	void Window::printError(std::string_view msg) const
+	{
+		std::cout << msg << std::endl;
 	}
 }

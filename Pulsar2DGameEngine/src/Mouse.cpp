@@ -1,45 +1,45 @@
-#include "Mouse.h"
+#include "pul_Mouse.hpp"
 
-namespace pulsar
+namespace pul
 {
-	eqx::Point<double> Mouse::Location = eqx::Point<double>();
-	eqx::Point<double> Mouse::LeftClickDownLocation = eqx::Point<double>();
-	eqx::Point<double> Mouse::RightClickDownLocation = eqx::Point<double>();
-	eqx::Point<double> Mouse::LeftClickUpLocation = eqx::Point<double>();
-	eqx::Point<double> Mouse::RightClickUpLocation = eqx::Point<double>();
-	Mouse::Button Mouse::LeftButton = Mouse::Button::up;
-	Mouse::Button Mouse::RightButton = Mouse::Button::up;
+	eqx::Point<double> Mouse::m_CurrentLocation = { 0.0, 0.0 };
+	eqx::Point<double> Mouse::m_LeftClickDownLocation = { 0.0, 0.0 };
+	eqx::Point<double> Mouse::m_LeftClickUpLocation = { 0.0, 0.0 };
+	eqx::Point<double> Mouse::m_RightClickDownLocation = { 0.0, 0.0 };
+	eqx::Point<double> Mouse::m_RightClickUpLocation = { 0.0, 0.0 };
+	Mouse::Button Mouse::m_LeftButtonState = Mouse::Button::up;
+	Mouse::Button Mouse::m_RightButtonState = Mouse::Button::up;
 
 	void Mouse::handleEvent(const SDL_Event& e)
 	{
 		switch (e.type)
 		{
 		case SDL_MOUSEMOTION:
-			Location.x = static_cast<double>(e.motion.x);
-			Location.y = static_cast<double>(e.motion.y);
+			m_CurrentLocation.x = static_cast<double>(e.motion.x);
+			m_CurrentLocation.y = static_cast<double>(e.motion.y);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (e.button.button == SDL_BUTTON_LEFT)
 			{
-				LeftButton = Mouse::Button::down;
-				LeftClickDownLocation = Location;
+				m_LeftButtonState = Mouse::Button::down;
+				m_LeftClickDownLocation = m_CurrentLocation;
 			}
 			else if (e.button.button == SDL_BUTTON_RIGHT)
 			{
-				RightButton = Mouse::Button::down;
-				RightClickDownLocation = Location;
+				m_RightButtonState = Mouse::Button::down;
+				m_RightClickDownLocation = m_CurrentLocation;
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (e.button.button == SDL_BUTTON_LEFT)
 			{
-				LeftButton = Mouse::Button::up;
-				LeftClickUpLocation = Location;
+				m_LeftButtonState = Mouse::Button::up;
+				m_LeftClickUpLocation = m_CurrentLocation;
 			}
 			else if (e.button.button == SDL_BUTTON_RIGHT)
 			{
-				RightButton = Mouse::Button::up;
-				RightClickUpLocation = Location;
+				m_RightButtonState = Mouse::Button::up;
+				m_RightClickUpLocation = m_CurrentLocation;
 			}
 			break;
 		default:
@@ -47,28 +47,28 @@ namespace pulsar
 		}
 	}
 
-	Mouse::Mouse()
+	const eqx::Point<double>& Mouse::getCurrentLocation()
 	{
-		refresh();
+		return m_CurrentLocation;
 	}
 
-	Mouse& Mouse::getInstance()
+	const eqx::Point<double>& Mouse::getLeftClickDownLocation()
 	{
-		static Mouse instance;
-		return instance;
+		return m_LeftClickDownLocation;
 	}
 
-	void Mouse::refresh()
+	const eqx::Point<double>& Mouse::getLeftClickUpLocation()
 	{
-		int x, y;
-		Uint32 buttons = SDL_GetMouseState(&x, &y);
-		Location.x = static_cast<double>(x);
-		Location.y = static_cast<double>(y);
-		LeftButton = buttons & SDL_BUTTON(SDL_BUTTON_LEFT) ? Button::down : Button::up;
-		RightButton = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT) ? Button::down : Button::up;
-		LeftClickDownLocation = eqx::Point<double>();
-		RightClickDownLocation = eqx::Point<double>();
-		LeftClickUpLocation = eqx::Point<double>();
-		RightClickUpLocation = eqx::Point<double>();
+		return m_LeftClickUpLocation;
+	}
+
+	const eqx::Point<double>& Mouse::getRightClickDownLocation()
+	{
+		return m_RightClickDownLocation;
+	}
+
+	const eqx::Point<double>& Mouse::getRightClickUpLocation()
+	{
+		return m_RightClickUpLocation;
 	}
 }
