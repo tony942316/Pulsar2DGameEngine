@@ -13,6 +13,8 @@ namespace pul
 		m_Height(height),
 		m_FrameCount(0ULL),
 		m_LastFrameTime(0.0),
+		m_LongestFrame(0.0),
+		m_ShortestFrame(std::numeric_limits<double>::max()),
 		m_EventFunction([](const SDL_Event&) {}),
 		m_UpdateFunction([]() {}),
 		m_RenderFunction([]() {}),
@@ -87,6 +89,10 @@ namespace pul
 			m_FrameCount++;
 			m_LastFrameTime = 
 				singleFrameTimer.readTime<tu_us>() / 1'000'000.0;
+			m_LongestFrame = m_LastFrameTime > m_LongestFrame ?
+				m_LastFrameTime : m_LongestFrame;
+			m_ShortestFrame = m_LastFrameTime < m_ShortestFrame ?
+				m_LastFrameTime : m_ShortestFrame;
 		}
 
 		SDL_DestroyRenderer(m_Renderer);
@@ -124,9 +130,15 @@ namespace pul
 		using namespace eqx::shortTimeUnits;
 		auto avgFT = m_FrameTimer.readTime<tu_us>() / m_FrameCount;
 		auto avgFPS = 1'000'000.0 / avgFT;
+		auto longestFrame = 
+			static_cast<unsigned long long>(m_LongestFrame * 1'000'000.0);
+		auto shortestFrame =
+			static_cast<unsigned long long>(m_ShortestFrame * 1'000'000.0);
 		auto result = std::string("");
 
 		m_FrameCount = 0ULL;
+		m_LongestFrame = 0.0;
+		m_ShortestFrame = std::numeric_limits<double>::max();
 		m_FrameTimer.start();
 
 		result += "=====================\n";
@@ -136,8 +148,24 @@ namespace pul
 		result += "Average FPS: ";
 		result += std::to_string(avgFPS);
 		result += "\n";
+		result += "Longest Frame Time: ";
+		result += std::to_string(longestFrame);
+		result += "\n";
+		result += "Shortest Frame Time: ";
+		result += std::to_string(shortestFrame);
+		result += "\n";
 		result += "=====================\n";
 		return result;
+	}
+
+	int Window::getWidth() const
+	{
+		return m_Width;
+	}
+
+	int Window::getHeight() const
+	{
+		return m_Height;
 	}
 
 	void Window::printSDLError() const

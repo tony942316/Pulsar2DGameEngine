@@ -117,7 +117,7 @@
 Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
 Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
 Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
-Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\DLLs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,7 +156,7 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
 Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
 Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
 Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
-Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\DLLs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -190,7 +190,7 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
 Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
 Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
 Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
-Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\DLLs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -229,7 +229,7 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
 Xcopy /E /Y /I $(SolutionDir)Extensions\Include $(SolutionDir)bin\Include
 Xcopy /E /Y /I $(SolutionDir)bin\Include $(SolutionDir)Releases\Include
 Xcopy /Y $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\$(ProjectName).lib $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\
-Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\Libs\$(Platform)$(Configuration)\</Command>
+Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)Releases\DLLs\$(Platform)$(Configuration)\</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

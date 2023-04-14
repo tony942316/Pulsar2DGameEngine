@@ -202,13 +202,28 @@ namespace eqx
 	 *
 	 * @returns true If Points Are Equivalent
 	 */
-	template <typename T>
+	template <std::floating_point T>
 	[[nodiscard]] constexpr 
 		bool equals(const Point<T>& point1, const Point<T>& point2,
 			double error = 0.001) noexcept
 	{
 		return equals(point1.x, point2.x, error) && 
 			equals(point1.y, point2.y, error);
+	}
+
+	/**
+	 * @brief point1 == point2
+	 *
+	 * @param point1 First Point
+	 * @param point2 Second Point
+	 *
+	 * @returns true If Points Are Equivalent
+	 */
+	template <eqx::integer T>
+	[[nodiscard]] constexpr
+		bool equals(const Point<T>& point1, const Point<T>& point2) noexcept
+	{
+		return equals(point1.x, point2.x) && equals(point1.y, point2.y);
 	}
 
 	/**
@@ -240,9 +255,10 @@ namespace eqx
 		constexpr auto origin = Point<T>();
 
 		auto dist = eqx::distance(origin, point);
-		eqx::runtimeAssert(dist != eqx::zero<T>, "dist Was 0!");
 
-		auto result = Point<T>(point.x / dist, point.y / dist);
+		auto result = dist != eqx::zero<T> ? 
+			Point<T>(point.x / dist, point.y / dist) :
+			Point<T>();
 		return result;
 	}
 
