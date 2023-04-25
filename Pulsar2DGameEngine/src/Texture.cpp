@@ -133,19 +133,20 @@ namespace pul
 
 	void Texture::render(const eqx::Point<double>& location) const noexcept
 	{
-		render(Config({ { 
+		render(Config({ eqx::Rectangle<double>( 
 				location.x, 
 				location.y,
 				static_cast<double>(m_Width), 
-				static_cast<double>(m_Height) },
-				0.0, { 0.0, 0.0 }, SDL_FLIP_NONE, { 255, 255, 255 }
+				static_cast<double>(m_Height)),
+				0.0, eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE, 
+				{ 255, 255, 255 }
 		}));
 	}
 
 	void Texture::render(
 		const eqx::Rectangle<double>& destination) const noexcept
 	{
-		render(Config({ destination, 0.0, { 0.0, 0.0 }, 
+		render(Config({ destination, 0.0, eqx::Point<double>(0.0, 0.0), 
 			SDL_FLIP_NONE, { 255, 255, 255 } }));
 	}
 

@@ -8,11 +8,12 @@ namespace pul
 		m_Speed(0.0),
 		m_RotationSpeed(0.0),
 		m_RotationTarget(0.0),
-		m_Direction({ 0.0, 0.0 }),
-		m_Target({ 0.0, 0.0 }),
+		m_Direction(eqx::Point<double>(0.0, 0.0)),
+		m_Target(eqx::Point<double>(0.0, 0.0)),
 		m_Texture(nullptr),
-		m_RenderConfiguration({ { 0.0, 0.0, 0.0, 0.0 }, 
-				0.0, { 0.0, 0.0 }, SDL_FLIP_NONE, { 255, 255, 255 } })
+		m_RenderConfiguration({ eqx::Rectangle<double>(0.0, 0.0, 0.0, 0.0), 
+			0.0, eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE, 
+			{ 255, 255, 255 } })
 	{
 	}
 
@@ -23,10 +24,11 @@ namespace pul
 		m_Speed(speed),
 		m_RotationSpeed(0.0),
 		m_RotationTarget(0.0),
-		m_Direction({ 0.0, 0.0 }),
-		m_Target({ 0.0, 0.0 }),
+		m_Direction(eqx::Point<double>(0.0, 0.0)),
+		m_Target(eqx::Point<double>(0.0, 0.0)),
 		m_Texture(&texture),
-		m_RenderConfiguration({ location, 0.0, { 0.0, 0.0 }, SDL_FLIP_NONE,
+		m_RenderConfiguration({ location, 0.0, 
+			eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE,
 			{ 255, 255, 255 } })
 	{
 	}

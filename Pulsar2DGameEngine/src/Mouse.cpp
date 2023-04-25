@@ -2,11 +2,16 @@
 
 namespace pul
 {
-	eqx::Point<double> Mouse::m_CurrentLocation = { 0.0, 0.0 };
-	eqx::Point<double> Mouse::m_LeftClickDownLocation = { 0.0, 0.0 };
-	eqx::Point<double> Mouse::m_LeftClickUpLocation = { 0.0, 0.0 };
-	eqx::Point<double> Mouse::m_RightClickDownLocation = { 0.0, 0.0 };
-	eqx::Point<double> Mouse::m_RightClickUpLocation = { 0.0, 0.0 };
+	eqx::Point<double> Mouse::m_CurrentLocation = 
+		eqx::Point<double>(0.0, 0.0);
+	eqx::Point<double> Mouse::m_LeftClickDownLocation = 
+		eqx::Point<double>(0.0, 0.0);
+	eqx::Point<double> Mouse::m_LeftClickUpLocation = 
+		eqx::Point<double>(0.0, 0.0);
+	eqx::Point<double> Mouse::m_RightClickDownLocation = 
+		eqx::Point<double>(0.0, 0.0);
+	eqx::Point<double> Mouse::m_RightClickUpLocation = 
+		eqx::Point<double>(0.0, 0.0);
 	Mouse::Button Mouse::m_LeftButtonState = Mouse::Button::up;
 	Mouse::Button Mouse::m_RightButtonState = Mouse::Button::up;
 
