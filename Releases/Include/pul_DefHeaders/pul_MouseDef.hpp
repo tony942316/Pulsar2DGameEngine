@@ -1,21 +1,8 @@
-#include "pul_Mouse.hpp"
+#pragma once
 
 namespace pul
 {
-	eqx::Point<double> Mouse::m_CurrentLocation = 
-		eqx::Point<double>(0.0, 0.0);
-	eqx::Point<double> Mouse::m_LeftClickDownLocation = 
-		eqx::Point<double>(0.0, 0.0);
-	eqx::Point<double> Mouse::m_LeftClickUpLocation = 
-		eqx::Point<double>(0.0, 0.0);
-	eqx::Point<double> Mouse::m_RightClickDownLocation = 
-		eqx::Point<double>(0.0, 0.0);
-	eqx::Point<double> Mouse::m_RightClickUpLocation = 
-		eqx::Point<double>(0.0, 0.0);
-	Mouse::Button Mouse::m_LeftButtonState = Mouse::Button::up;
-	Mouse::Button Mouse::m_RightButtonState = Mouse::Button::up;
-
-	void Mouse::handleEvent(const SDL_Event& e)
+	inline void Mouse::handleEvent(const SDL_Event& e)
 	{
 		switch (e.type)
 		{
@@ -52,27 +39,27 @@ namespace pul
 		}
 	}
 
-	const eqx::Point<double>& Mouse::getCurrentLocation()
+	inline const eqx::Point<double>& Mouse::getCurrentLocation()
 	{
 		return m_CurrentLocation;
 	}
 
-	const eqx::Point<double>& Mouse::getLeftClickDownLocation()
+	inline const eqx::Point<double>& Mouse::getLeftClickDownLocation()
 	{
 		return m_LeftClickDownLocation;
 	}
 
-	const eqx::Point<double>& Mouse::getLeftClickUpLocation()
+	inline const eqx::Point<double>& Mouse::getLeftClickUpLocation()
 	{
 		return m_LeftClickUpLocation;
 	}
 
-	const eqx::Point<double>& Mouse::getRightClickDownLocation()
+	inline const eqx::Point<double>& Mouse::getRightClickDownLocation()
 	{
 		return m_RightClickDownLocation;
 	}
 
-	const eqx::Point<double>& Mouse::getRightClickUpLocation()
+	inline const eqx::Point<double>& Mouse::getRightClickUpLocation()
 	{
 		return m_RightClickUpLocation;
 	}

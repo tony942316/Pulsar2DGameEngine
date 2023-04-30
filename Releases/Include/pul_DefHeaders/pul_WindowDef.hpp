@@ -1,12 +1,8 @@
-#include "pul_Window.hpp"
-
-#include <iostream>
-
-#include "pul_Mouse.hpp"
+#pragma once
 
 namespace pul
 {
-	Window::Window(std::string_view name, int width, int height)
+	inline Window::Window(std::string_view name, int width, int height)
 		:
 		m_Name(name),
 		m_Width(width),
@@ -48,12 +44,12 @@ namespace pul
 		SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0x00);
 	}
 
-	Window::~Window()
+	inline Window::~Window()
 	{
 		SDL_Quit();
 	}
 
-	void Window::show()
+	inline void Window::show()
 	{
 		using namespace eqx::shortTimeUnits;
 
@@ -87,7 +83,7 @@ namespace pul
 			SDL_RenderPresent(m_Renderer);
 
 			m_FrameCount++;
-			m_LastFrameTime = 
+			m_LastFrameTime =
 				singleFrameTimer.readTime<tu_us>() / 1'000'000.0;
 			m_LongestFrame = m_LastFrameTime > m_LongestFrame ?
 				m_LastFrameTime : m_LongestFrame;
@@ -99,38 +95,38 @@ namespace pul
 		SDL_DestroyWindow(m_Window);
 	}
 
-	void Window::setEventFunction(
+	inline void Window::setEventFunction(
 		const std::function<void(const SDL_Event&)>& func)
 	{
 		m_EventFunction = func;
 	}
 
-	void Window::setUpdateFunction(const std::function<void(void)>& func)
+	inline void Window::setUpdateFunction(const std::function<void(void)>& func)
 	{
 		m_UpdateFunction = func;
 	}
 
-	void Window::setRenderFunction(const std::function<void(void)>& func)
+	inline void Window::setRenderFunction(const std::function<void(void)>& func)
 	{
 		m_RenderFunction = func;
 	}
 
-	double Window::getDeltaTime() const
+	inline double Window::getDeltaTime() const
 	{
 		return m_LastFrameTime;
 	}
 
-	SDL_Renderer* Window::getRenderer()
+	inline SDL_Renderer* Window::getRenderer()
 	{
 		return m_Renderer;
 	}
 
-	std::string Window::getFPSInfo()
+	inline std::string Window::getFPSInfo()
 	{
 		using namespace eqx::shortTimeUnits;
 		auto avgFT = m_FrameTimer.readTime<tu_us>() / m_FrameCount;
 		auto avgFPS = 1'000'000.0 / avgFT;
-		auto longestFrame = 
+		auto longestFrame =
 			static_cast<unsigned long long>(m_LongestFrame * 1'000'000.0);
 		auto shortestFrame =
 			static_cast<unsigned long long>(m_ShortestFrame * 1'000'000.0);
@@ -158,22 +154,22 @@ namespace pul
 		return result;
 	}
 
-	int Window::getWidth() const
+	inline int Window::getWidth() const
 	{
 		return m_Width;
 	}
 
-	int Window::getHeight() const
+	inline int Window::getHeight() const
 	{
 		return m_Height;
 	}
 
-	void Window::printSDLError() const
+	inline void Window::printSDLError() const
 	{
 		std::cout << SDL_GetError() << std::endl;
 	}
 
-	void Window::printError(std::string_view msg) const
+	inline void Window::printError(std::string_view msg) const
 	{
 		std::cout << msg << std::endl;
 	}

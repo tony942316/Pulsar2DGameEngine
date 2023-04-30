@@ -1,8 +1,8 @@
-#include "pul_Entity.hpp"
+#pragma once
 
 namespace pul
 {
-	Entity::Entity() noexcept
+	inline Entity::Entity() noexcept
 		:
 		m_RotationDirection(0),
 		m_Speed(0.0),
@@ -11,14 +11,14 @@ namespace pul
 		m_Direction(eqx::Point<double>(0.0, 0.0)),
 		m_Target(eqx::Point<double>(0.0, 0.0)),
 		m_Texture(nullptr),
-		m_RenderConfiguration({ eqx::Rectangle<double>(0.0, 0.0, 0.0, 0.0), 
-			0.0, eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE, 
+		m_RenderConfiguration({ eqx::Rectangle<double>(0.0, 0.0, 0.0, 0.0),
+			0.0, eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE,
 			{ 255, 255, 255 } })
 	{
 	}
 
-	Entity::Entity(Texture& texture, const eqx::Rectangle<double>& location,
-		double speed) noexcept
+	inline Entity::Entity(Texture& texture, 
+		const eqx::Rectangle<double>& location, double speed) noexcept
 		:
 		m_RotationDirection(0),
 		m_Speed(speed),
@@ -27,18 +27,18 @@ namespace pul
 		m_Direction(eqx::Point<double>(0.0, 0.0)),
 		m_Target(eqx::Point<double>(0.0, 0.0)),
 		m_Texture(&texture),
-		m_RenderConfiguration({ location, 0.0, 
+		m_RenderConfiguration({ location, 0.0,
 			eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE,
 			{ 255, 255, 255 } })
 	{
 	}
 
-	void Entity::render() const noexcept
+	inline void Entity::render() const noexcept
 	{
 		m_Texture->render(m_RenderConfiguration);
 	}
 
-	[[nodiscard]] bool Entity::targetReached() const noexcept
+	[[nodiscard]] inline bool Entity::targetReached() const noexcept
 	{
 		if (eqx::equals(getLocation(), m_Target, 0.01))
 		{
@@ -50,7 +50,7 @@ namespace pul
 		}
 	}
 
-	[[nodiscard]] bool Entity::rotationTargetReached() const noexcept
+	[[nodiscard]] inline bool Entity::rotationTargetReached() const noexcept
 	{
 		if (eqx::equals(getAngle(), m_RotationTarget, 0.01))
 		{
@@ -62,7 +62,7 @@ namespace pul
 		}
 	}
 
-	void Entity::move(double dt) noexcept
+	inline void Entity::move(double dt) noexcept
 	{
 		auto loc = getDrawBox();
 
@@ -81,135 +81,139 @@ namespace pul
 		}
 	}
 
-	void Entity::rotate(double dt) noexcept
+	inline void Entity::rotate(double dt) noexcept
 	{
 		auto loc = getAngle();
 		m_RenderConfiguration.angle +=
 			m_RotationDirection * m_RotationSpeed * dt;
-		if (eqx::getSign(m_RotationTarget - getAngle()) != 
+		if (eqx::getSign(m_RotationTarget - getAngle()) !=
 			eqx::getSign(m_RotationTarget - loc))
 		{
 			m_RenderConfiguration.angle = m_RotationTarget;
 		}
 	}
 
-	void Entity::setRotationDirection(int direction) noexcept
+	inline void Entity::setRotationDirection(int direction) noexcept
 	{
 		m_RotationDirection = direction;
 	}
 
-	void Entity::setSpeed(double speed) noexcept
+	inline void Entity::setSpeed(double speed) noexcept
 	{
 		m_Speed = speed;
 	}
 
-	void Entity::setRotationSpeed(double speed) noexcept
+	inline void Entity::setRotationSpeed(double speed) noexcept
 	{
 		m_RotationSpeed = speed;
 	}
 
-	void Entity::setRotationTarget(double target) noexcept
+	inline void Entity::setRotationTarget(double target) noexcept
 	{
 		m_RotationTarget = target;
 		setRotationDirection(eqx::getSign(target - getAngle()));
 	}
 
-	void Entity::setDirection(const eqx::Point<double>& direction) noexcept
+	inline void 
+		Entity::setDirection(const eqx::Point<double>& direction) noexcept
 	{
 		m_Direction = eqx::normalize(direction);
 	}
 
-	void Entity::setTarget(const eqx::Point<double>& target) noexcept
+	inline void Entity::setTarget(const eqx::Point<double>& target) noexcept
 	{
 		m_Target = target;
 		setDirection(m_Target - getLocation());
 	}
 
-	void Entity::setRotationPoint(const eqx::Point<double>& point) noexcept
+	inline void 
+		Entity::setRotationPoint(const eqx::Point<double>& point) noexcept
 	{
 		m_RenderConfiguration.rotationPoint = point;
 	}
 
-	void Entity::setTexture(Texture& texture) noexcept
+	inline void Entity::setTexture(Texture& texture) noexcept
 	{
 		m_Texture = &texture;
 	}
 
-	void Entity::setLocation(const eqx::Point<double>& point) noexcept
+	inline void Entity::setLocation(const eqx::Point<double>& point) noexcept
 	{
 		m_RenderConfiguration.destination.x = point.x;
 		m_RenderConfiguration.destination.y = point.y;
 	}
 
-	void Entity::setDrawBox(const eqx::Rectangle<double>& rect) noexcept
+	inline void Entity::setDrawBox(const eqx::Rectangle<double>& rect) noexcept
 	{
 		m_RenderConfiguration.destination = rect;
 	}
 
-	void Entity::setColor(const Texture::Color& rgb) noexcept
+	inline void Entity::setColor(const Texture::Color& rgb) noexcept
 	{
 		m_RenderConfiguration.rgb = rgb;
 	}
 
-	[[nodiscard]] eqx::Rectangle<double>& Entity::editDrawBox() noexcept
+	[[nodiscard]] inline eqx::Rectangle<double>& Entity::editDrawBox() noexcept
 	{
 		return m_RenderConfiguration.destination;
 	}
 
-	[[nodiscard]] int Entity::getRotationDirection() const noexcept
+	[[nodiscard]] inline int Entity::getRotationDirection() const noexcept
 	{
 		return m_RotationDirection;
 	}
 
-	[[nodiscard]] double Entity::getSpeed() const noexcept
+	[[nodiscard]] inline double Entity::getSpeed() const noexcept
 	{
 		return m_Speed;
 	}
 
-	[[nodiscard]] double Entity::getRotationSpeed() const noexcept
+	[[nodiscard]] inline double Entity::getRotationSpeed() const noexcept
 	{
 		return m_RotationSpeed;
 	}
 
-	[[nodiscard]] double Entity::getRotationTarget() const noexcept
+	[[nodiscard]] inline double Entity::getRotationTarget() const noexcept
 	{
 		return m_RotationTarget;
 	}
 
-	[[nodiscard]] const eqx::Point<double>& 
+	[[nodiscard]] inline const eqx::Point<double>&
 		Entity::getDirection() const noexcept
 	{
 		return m_Direction;
 	}
 
-	[[nodiscard]] const eqx::Point<double>& Entity::getTarget() const noexcept
+	[[nodiscard]] inline const 
+		eqx::Point<double>& Entity::getTarget() const noexcept
 	{
 		return m_Target;
 	}
 
-	[[nodiscard]] const eqx::Point<double>& 
+	[[nodiscard]] inline const eqx::Point<double>&
 		Entity::getRotationPoint() const noexcept
 	{
 		return m_RenderConfiguration.rotationPoint;
 	}
 
-	[[nodiscard]] eqx::Point<double> Entity::getLocation() const noexcept
+	[[nodiscard]] inline eqx::Point<double> Entity::getLocation() const noexcept
 	{
 		return m_RenderConfiguration.destination.getLocation();
 	}
 
-	[[nodiscard]] const eqx::Rectangle<double>& 
+	[[nodiscard]] inline const eqx::Rectangle<double>&
 		Entity::getDrawBox() const noexcept
 	{
 		return m_RenderConfiguration.destination;
 	}
 
-	[[nodiscard]] double Entity::getAngle() const noexcept
+	[[nodiscard]] inline double Entity::getAngle() const noexcept
 	{
 		return m_RenderConfiguration.angle;
 	}
 
-	[[nodiscard]] const Texture::Color& Entity::getColor() const noexcept
+	[[nodiscard]] inline const Texture::Color& 
+		Entity::getColor() const noexcept
 	{
 		return m_RenderConfiguration.rgb;
 	}

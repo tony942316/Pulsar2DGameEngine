@@ -1,10 +1,12 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <string_view>
 
 #include <EquinoxSTD.hpp>
 #include <SDL.h>
+#include <SDL_image.h>
 
 namespace pul
 {
@@ -25,22 +27,24 @@ namespace pul
 			Color rgb;
 		};
 
-		Texture() noexcept;
-		Texture(SDL_Renderer* renderer, std::string_view filePath) noexcept;
+		explicit inline Texture() noexcept;
+		explicit inline Texture(SDL_Renderer* renderer, 
+			std::string_view filePath) noexcept;
 
-		Texture(const Texture& other) noexcept;
-		Texture(Texture&& other) noexcept;
-		Texture& operator= (const Texture& other) noexcept;
-		Texture& operator= (Texture&& other) noexcept;
+		inline Texture(const Texture& other) noexcept;
+		inline Texture(Texture&& other) noexcept;
+		inline Texture& operator= (const Texture& other) noexcept;
+		inline Texture& operator= (Texture&& other) noexcept;
 
-		~Texture() noexcept;
+		inline ~Texture() noexcept;
 
-		void setRenderer(SDL_Renderer* renderer) noexcept;
-		void loadFile(std::string_view filePath) noexcept;
+		inline void setRenderer(SDL_Renderer* renderer) noexcept;
+		inline void loadFile(std::string_view filePath) noexcept;
 
-		void render(const eqx::Point<double>& location) const noexcept;
-		void render(const eqx::Rectangle<double>& destination) const noexcept;
-		void render(const Config& config) const noexcept;
+		inline void render(const eqx::Point<double>& location) const noexcept;
+		inline void 
+			render(const eqx::Rectangle<double>& destination) const noexcept;
+		inline void render(const Config& config) const noexcept;
 
 	private:
 		int m_Width, m_Height;
@@ -51,3 +55,5 @@ namespace pul
 		SDL_Renderer* m_Renderer;
 	};
 }
+
+#include "pul_DefHeaders/pul_TextureDef.hpp"

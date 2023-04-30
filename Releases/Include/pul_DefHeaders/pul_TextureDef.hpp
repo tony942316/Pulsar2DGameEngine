@@ -1,18 +1,14 @@
-#include "pul_Texture.hpp"
-
-#include <iostream>
-
-#include <SDL_image.h>
+#pragma once
 
 namespace pul
 {
-	Texture::Texture() noexcept
+	inline Texture::Texture() noexcept
 		:
 		Texture(nullptr, "")
 	{
 	}
 
-	Texture::Texture(SDL_Renderer* renderer, 
+	inline Texture::Texture(SDL_Renderer* renderer,
 		std::string_view filePath) noexcept
 		:
 		m_Width(0),
@@ -27,21 +23,13 @@ namespace pul
 		}
 	}
 
-	Texture::Texture(const Texture& other) noexcept
+	inline Texture::Texture(const Texture& other) noexcept
 		:
-		m_Width(0),
-		m_Height(0),
-		m_FilePath(""),
-		m_SdlTexture(nullptr),
-		m_Renderer(other.m_Renderer)
+		Texture(other.m_Renderer, other.m_FilePath)
 	{
-		if (m_Renderer != nullptr && other.m_FilePath != "")
-		{
-			loadFile(other.m_FilePath);
-		}
 	}
 
-	Texture::Texture(Texture&& other) noexcept
+	inline Texture::Texture(Texture&& other) noexcept
 		:
 		m_Width(other.m_Width),
 		m_Height(other.m_Height),
@@ -56,7 +44,7 @@ namespace pul
 		other.m_Renderer = nullptr;
 	}
 
-	Texture& Texture::operator= (const Texture& other) noexcept
+	inline Texture& Texture::operator= (const Texture& other) noexcept
 	{
 		if (m_SdlTexture != nullptr)
 		{
@@ -73,7 +61,7 @@ namespace pul
 		return *this;
 	}
 
-	Texture& Texture::operator= (Texture&& other) noexcept
+	inline Texture& Texture::operator= (Texture&& other) noexcept
 	{
 		std::swap(m_Width, other.m_Width);
 		std::swap(m_Height, other.m_Height);
@@ -84,7 +72,7 @@ namespace pul
 		return *this;
 	}
 
-	Texture::~Texture() noexcept
+	inline Texture::~Texture() noexcept
 	{
 		if (m_SdlTexture != nullptr)
 		{
@@ -92,12 +80,12 @@ namespace pul
 		}
 	}
 
-	void Texture::setRenderer(SDL_Renderer* renderer) noexcept
+	inline void Texture::setRenderer(SDL_Renderer* renderer) noexcept
 	{
 		m_Renderer = renderer;
 	}
 
-	void Texture::loadFile(std::string_view filePath) noexcept
+	inline void Texture::loadFile(std::string_view filePath) noexcept
 	{
 		eqx::runtimeAssert(m_Renderer != nullptr,
 			"Attempted To Load A File Without Setting A Renderer!");
@@ -131,26 +119,21 @@ namespace pul
 		SDL_FreeSurface(surface);
 	}
 
-	void Texture::render(const eqx::Point<double>& location) const noexcept
+	inline void 
+		Texture::render(const eqx::Point<double>& location) const noexcept
 	{
-		render(Config({ eqx::Rectangle<double>( 
-				location.x, 
-				location.y,
-				static_cast<double>(m_Width), 
-				static_cast<double>(m_Height)),
-				0.0, eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE, 
-				{ 255, 255, 255 }
-		}));
+		render(eqx::Rectangle<double>(location.x, location.y, 
+			static_cast<double>(m_Width), static_cast<double>(m_Height)));
 	}
 
-	void Texture::render(
+	inline void Texture::render(
 		const eqx::Rectangle<double>& destination) const noexcept
 	{
-		render(Config({ destination, 0.0, eqx::Point<double>(0.0, 0.0), 
+		render(Config({ destination, 0.0, eqx::Point<double>(0.0, 0.0),
 			SDL_FLIP_NONE, { 255, 255, 255 } }));
 	}
 
-	void Texture::render(const Config& config) const noexcept
+	inline void Texture::render(const Config& config) const noexcept
 	{
 		SDL_Rect source = {
 			0, 0, m_Width, m_Height
@@ -168,15 +151,15 @@ namespace pul
 			static_cast<int>(config.rotationPoint.y)
 		};
 
-		if (SDL_SetTextureColorMod(m_SdlTexture, 
+		if (SDL_SetTextureColorMod(m_SdlTexture,
 			config.rgb.r, config.rgb.g, config.rgb.b) == -1)
 		{
 			std::cout << SDL_GetError() << std::endl;
 		}
 
 		if (SDL_RenderCopyEx(
-			m_Renderer, m_SdlTexture, &source, &dest,
-			config.angle, &rotationPoint, config.flip) == -1)
+				m_Renderer, m_SdlTexture, &source, &dest,
+				config.angle, &rotationPoint, config.flip) == -1)
 		{
 			std::cout << SDL_GetError() << std::endl;
 		}

@@ -21,17 +21,22 @@ namespace pul
 		Mouse& operator= (Mouse&& other) = delete;
 		~Mouse() = delete;
 
-		static void handleEvent(const SDL_Event& e);
-		static const eqx::Point<double>& getCurrentLocation();
-		static const eqx::Point<double>& getLeftClickDownLocation();
-		static const eqx::Point<double>& getLeftClickUpLocation();
-		static const eqx::Point<double>& getRightClickDownLocation();
-		static const eqx::Point<double>& getRightClickUpLocation();
+		static inline void handleEvent(const SDL_Event& e);
+		static inline const eqx::Point<double>& getCurrentLocation();
+		static inline const eqx::Point<double>& getLeftClickDownLocation();
+		static inline const eqx::Point<double>& getLeftClickUpLocation();
+		static inline const eqx::Point<double>& getRightClickDownLocation();
+		static inline const eqx::Point<double>& getRightClickUpLocation();
 
 	private:
-		static eqx::Point<double> m_CurrentLocation,
-			m_LeftClickDownLocation, m_LeftClickUpLocation,
-			m_RightClickDownLocation, m_RightClickUpLocation;
-		static Button m_LeftButtonState, m_RightButtonState;
+		static inline auto m_CurrentLocation = eqx::Point<double>(),
+			m_LeftClickDownLocation = eqx::Point<double>(),
+			m_LeftClickUpLocation = eqx::Point<double>(),
+			m_RightClickDownLocation = eqx::Point<double>(),
+			m_RightClickUpLocation = eqx::Point<double>();
+		static inline auto m_LeftButtonState = Mouse::Button::up,
+			m_RightButtonState = Mouse::Button::up;
 	};
 }
+
+#include "pul_DefHeaders/pul_MouseDef.hpp"

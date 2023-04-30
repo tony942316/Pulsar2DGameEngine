@@ -233,6 +233,10 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Headers\pul_DefHeaders\pul_EntityDef.hpp" />
+    <ClInclude Include="src\Headers\pul_DefHeaders\pul_MouseDef.hpp" />
+    <ClInclude Include="src\Headers\pul_DefHeaders\pul_TextureDef.hpp" />
+    <ClInclude Include="src\Headers\pul_DefHeaders\pul_WindowDef.hpp" />
     <ClInclude Include="src\Headers\pul_Mouse.hpp" />
     <ClInclude Include="src\Headers\pul_Entity.hpp" />
     <ClInclude Include="src\Headers\Pulsar.hpp" />
@@ -240,10 +244,7 @@ Xcopy /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDi
     <ClInclude Include="src\Headers\pul_Texture.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Mouse.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Pulsar2DGameEngine.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

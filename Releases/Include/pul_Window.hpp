@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string_view>
 #include <functional>
 
@@ -7,31 +8,33 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 
+#include "pul_Mouse.hpp"
+
 namespace pul
 {
 	class Window
 	{
 	public:
-		Window(std::string_view name, int width, int height);
-		~Window();
+		explicit inline Window(std::string_view name, int width, int height);
+		inline ~Window();
 
-		void show();
+		inline void show();
 
-		void setEventFunction(
+		inline void setEventFunction(
 			const std::function<void(const SDL_Event&)>& func);
-		void setUpdateFunction(const std::function<void(void)>& func);
-		void setRenderFunction(const std::function<void(void)>& func);
+		inline void setUpdateFunction(const std::function<void(void)>& func);
+		inline void setRenderFunction(const std::function<void(void)>& func);
 
-		double getDeltaTime() const;
-		SDL_Renderer* getRenderer();
-		std::string getFPSInfo();
+		inline double getDeltaTime() const;
+		inline SDL_Renderer* getRenderer();
+		inline std::string getFPSInfo();
 
-		int getWidth() const;
-		int getHeight() const;
+		inline int getWidth() const;
+		inline int getHeight() const;
 
 	private:
-		void printSDLError() const;
-		void printError(std::string_view msg = "") const;
+		inline void printSDLError() const;
+		inline void printError(std::string_view msg = "") const;
 
 		std::string m_Name;
 		int m_Width, m_Height;
@@ -47,3 +50,5 @@ namespace pul
 		eqx::StopWatch m_FrameTimer;
 	};
 }
+
+#include "pul_DefHeaders/pul_WindowDef.hpp"
