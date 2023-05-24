@@ -39,14 +39,7 @@
  * @param msg Message To Print To std::cerr
  */
 inline void eqx_debugOnly_runtimeAssert(bool expr,
-	std::string_view msg = "") noexcept
-{
-	if (!expr)
-	{
-		std::cerr << msg << std::endl;
-		std::abort();
-	}
-}
+	std::string_view msg = "") noexcept;
 
 #endif
 
@@ -146,10 +139,7 @@ namespace eqx
 	 * 
 	 * @returns Value Converted To std::string
 	 */
-	[[nodiscard]] inline std::string toString(const char* cstring)
-	{
-		return std::string(cstring);
-	}
+	[[nodiscard]] inline std::string toString(const char* cstring);
 
 	/**
 	 * @brief Convert A Value To A std::string
@@ -159,10 +149,7 @@ namespace eqx
 	 * @returns Value Converted To std::string
 	 */
 	template <eqx::stringable T>
-	[[nodiscard]] inline std::string toString(const T& val)
-	{
-		return std::to_string(val);
-	}
+	[[nodiscard]] std::string toString(const T& val);
 
 	/**
 	 * @brief Convert A Value To A std::string
@@ -172,10 +159,7 @@ namespace eqx
 	 * @returns Value Converted To std::string
 	 */
 	template <eqx::stringType T>
-	[[nodiscard]] inline std::string toString(const T& val)
-	{
-		return std::string(val);
-	}
+	[[nodiscard]] std::string toString(const T& val);
 
 	/**
 	 * @brief Convert A std::pair To A std::string Of Form
@@ -186,14 +170,11 @@ namespace eqx
 	 * @returns Pair Converted To std::string
 	 */
 	template <typename T, typename U>
-	[[nodiscard]] inline std::string toString(const std::pair<T, U>& val)
-	{
-		return std::string("(" + eqx::toString(val.first) +
-			", " + eqx::toString(val.second) + ")");
-	}
+	[[nodiscard]] std::string toString(const std::pair<T, U>& val);
 
 	/**
-	 * @brief
+	 * @brief Convert A Collection To A std::string Of Form
+	 *		"{ val[0], val[1], val[2], ... }"
 	 * 
 	 * @param val Collection To Be Converted, Must Be eqx::constCollection
 	 *		Compliant
@@ -201,21 +182,7 @@ namespace eqx
 	 * @returns Collection Converted To std::string
 	 */
 	template <eqx::constCollection T>
-	[[nodiscard]] inline std::string toString(const T& val)
-	{
-		auto result = std::string("");
-		result += "{ ";
-		std::ranges::for_each(val,
-			[&result](const auto& x)
-			{
-				result += eqx::toString(x);
-				result += ", ";
-			});
-		result.pop_back();
-		result.pop_back();
-		result += " }";
-		return result;
-	}
+	[[nodiscard]] std::string toString(const T& val);
 
 	namespace pairPrint
 	{
@@ -224,38 +191,32 @@ namespace eqx
 		 *		"(p.first, p.second)"
 		 */
 		template <typename T, typename U>
-		std::ostream& operator<< (std::ostream& os, std::pair<T, U> p)
-		{
-			return os << eqx::toString(p);
-		}
+		std::ostream& operator<< (std::ostream& os, std::pair<T, U> p);
 	}
+
+	/**
+	 * @brief Implementation Of gsl::narrow_cast<>
+	 */
+	template <typename T, typename U>
+	[[nodiscard]] constexpr T narrowCast(U x) noexcept;
 
 	namespace literals
 	{
 		/**
 		 * @brief std::size_t Literal
 		 */
-		consteval std::size_t operator""_size (unsigned long long x) noexcept
-		{
-			return static_cast<std::size_t>(x);
-		}
+		consteval std::size_t operator""_size (unsigned long long x) noexcept;
 
 		/**
 		 * @brief short Literal
 		 */
-		consteval short operator""_short (unsigned long long x) noexcept
-		{
-			return static_cast<short>(x);
-		}
+		consteval short operator""_short (unsigned long long x) noexcept;
 
 		/**
 		 * @brief unsigned short Literal
 		 */
-		consteval unsigned short operator""_ushort (
-			unsigned long long x) noexcept
-		{
-			return static_cast<unsigned short>(x);
-		}
+		consteval unsigned short 
+			operator""_ushort (unsigned long long x) noexcept;
 	}
 
 	/**
@@ -265,14 +226,7 @@ namespace eqx
 	 * @param expr Expression To Be Checked
 	 * @param msg Message To Print To std::cerr
 	 */
-	inline void runtimeAssert(bool expr, std::string_view msg = "") noexcept
-	{
-		if (!expr)
-		{
-			std::cerr << msg << std::endl;
-			std::abort();
-		}
-	}
+	inline void runtimeAssert(bool expr, std::string_view msg = "") noexcept;
 
 	/**
 	 * @brief "Zip" Two Collections Together In The Form Of
@@ -284,27 +238,7 @@ namespace eqx
 	 * @returns std::vector<std::pair<C1 Held Value, C2 Held Value>>
 	 */
 	template <eqx::constCollection C1, eqx::constCollection C2>
-	[[nodiscard]] inline auto zip(const C1& x, const C2& y)
-	{
-		eqx::runtimeAssert(std::ranges::size(x) == std::ranges::size(y),
-			"eqx::zip std::ranges::size(x) != std::ranges::size(y)!");
-
-		using C1HeldValue = 
-			std::remove_cvref_t<decltype(*std::ranges::cbegin(x))>;
-		using C2HeldValue = 
-			std::remove_cvref_t<decltype(*std::ranges::cbegin(y))>;
-
-		auto zippedRange = 
-			std::vector<std::pair<C1HeldValue, C2HeldValue>>();
-		zippedRange.reserve(std::ranges::size(x));
-
-		auto xIter = std::ranges::cbegin(x);
-		auto yIter = std::ranges::cbegin(y);
-		for (; xIter != std::ranges::cend(x); xIter++, yIter++)
-		{
-			zippedRange.emplace_back(*xIter, *yIter);
-		}
-
-		return zippedRange;
-	}
+	[[nodiscard]] inline auto zip(const C1& x, const C2& y);
 }
+
+#include "eqx_DefHeaders/eqx_MiscDef.hpp"

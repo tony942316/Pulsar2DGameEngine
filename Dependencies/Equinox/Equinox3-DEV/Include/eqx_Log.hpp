@@ -48,11 +48,11 @@ namespace eqx
 		/**
 		 * @brief Severity Of A Log
 		 */
-		EQX_SUPER_ENUM(Level, 
-			All, 
-			Info, 
-			Warning, 
-			Error, 
+		EQX_SUPER_ENUM(Level,
+			All,
+			Info,
+			Warning,
+			Error,
 			None
 		)
 
@@ -70,28 +70,15 @@ namespace eqx
 
 		/**
 		 * @brief Log A Message To The Active Stream And File
-		 * 
+		 *
 		 * @param level Level Of The Log
 		 * @param msg Message Of The Log
 		 * @param type Type Of The Log
 		 * @param loc Current Location In Source
 		 */
-		static void log(Level level, std::string_view msg,
+		static inline void log(Level level, std::string_view msg,
 			Type type = Type::None,
-			const std::source_location& loc = std::source_location::current())
-		{
-			auto logString = getFormattedString(loc, level, msg);
-			if (level >= s_LogLevel)
-			{
-				if (s_OutputStream != nullptr)
-				{
-					*s_OutputStream << logString << std::endl;
-				}
-				s_LogFile << logString << std::endl;
-				s_LastErrorType = type;
-				s_LastMessage = msg;
-			}
-		}
+			const std::source_location& loc = std::source_location::current());
 
 		/**
 		 * @brief Set Level Of Logs To Be Output i.e.
@@ -99,73 +86,48 @@ namespace eqx
 		 * 
 		 * @param level Cutoff i.e. all -> info -> warning -> error -> none
 		 */
-		static void setLevel(Level level) noexcept
-		{
-			s_LogLevel = level;
-		}
+		static inline void setLevel(Level level) noexcept;
 
 		/**
 		 * @brief Set The Stream Logs Are Written To
 		 * 
 		 * @param stream The New Output Stream
 		*/
-		static void setOutputStream(std::ostream& stream) noexcept
-		{
-			s_OutputStream = &stream;
-		}
+		static inline void setOutputStream(std::ostream& stream) noexcept;
 
 		/**
 		 * @brief Set The File Logs Are Written To
 		 * 
 		 * @param file The Path Of The New File
 		 */
-		static void setOutputFile(std::string_view file)
-		{
-			if (s_LogFile.is_open())
-			{
-				s_LogFile.close();
-			}
-			s_LogFile.open(file.data(), std::ios::out | std::ios::trunc);
-		}
+		static inline void setOutputFile(std::string_view file);
 
 		/**
 		 * @brief Clears The Last Error Message And Type
 		 */
-		static void clear() noexcept
-		{
-			s_LastErrorType = Log::Type::None;
-			s_LastMessage = "";
-		}
+		static inline void clear() noexcept;
 
 		/**
 		 * @brief Get Current Log Level
 		 * 
 		 * @returns Current Log Level
 		 */
-		[[nodiscard]] static Level getCurrentLogLevel() noexcept
-		{
-			return s_LogLevel;
-		}
+		[[nodiscard]] static inline Level getCurrentLogLevel() noexcept;
 
 		/**
 		 * @brief Get Type Of Last Log
 		 * 
 		 * @returns Last Log Type
 		 */
-		[[nodiscard]] static Type getLastLogType() noexcept
-		{
-			return s_LastErrorType;
-		}
+		[[nodiscard]] static inline Type getLastLogType() noexcept;
 
 		/**
 		 * @brief Get Message Of Last Log
 		 * 
 		 * @returns Last Message String
 		 */
-		[[nodiscard]] static std::string_view getLastLogMessage() noexcept
-		{
-			return s_LastMessage;
-		}
+		[[nodiscard]] static inline std::string_view
+			getLastLogMessage() noexcept;
 
 		/**
 		 * @brief Build String With eqx::Log Formatting i.e.
@@ -177,46 +139,9 @@ namespace eqx
 		 * 
 		 * @returns Formatted String
 		 */
-		[[nodiscard]] static std::string getFormattedString(
-			const std::source_location& loc, Level level,
-			std::string_view msg = "")
-		{
-			auto result = std::string("");
-			result.reserve(100);
-
-			auto fileName = std::string_view(loc.file_name());
-			auto functionName = std::string(loc.function_name());
-			auto lineNumber = std::to_string(loc.line());
-
-			result += "..";
-			result += fileName.substr(fileName.rfind('\\'));
-			result += "(";
-			result += functionName;
-			result += ",";
-			result += lineNumber;
-			result += ") ";
-			switch (level)
-			{
-			case Level::Info:
-				result += "[INFO]: ";
-				break;
-
-			case Level::Warning:
-				result += "[WARNING]: ";
-				break;
-
-			case Level::Error:
-				result += "[ERROR]: ";
-				break;
-
-			default:
-				result += "[UNKNOWN]: ";
-				break;
-			}
-			result += msg;
-
-			return result;
-		}
+		[[nodiscard]] static inline std::string 
+			getFormattedString(const std::source_location& loc, Level level,
+			std::string_view msg = "");
 
 		/**
 		 * @brief Get Log Levels That Log Properly i.e.
@@ -224,13 +149,8 @@ namespace eqx
 		 * 
 		 * @returns std::vector Of Loggable Levels
 		 */
-		[[nodiscard]] static consteval std::array<eqx::Log::Level, 3ULL>
-			getLoggableLevels() noexcept
-		{
-			return { eqx::Log::Level::Info,
-				eqx::Log::Level::Warning,
-				eqx::Log::Level::Error };
-		}
+		[[nodiscard]] static constexpr std::array<eqx::Log::Level, 3ULL>
+			getLoggableLevels() noexcept;
 
 	private:
 		static inline auto s_LogFile = std::ofstream("Log.txt",
@@ -241,3 +161,5 @@ namespace eqx
 		static inline auto s_LastMessage = std::string("");
 	};
 }
+
+#include "eqx_DefHeaders/eqx_LogDef.hpp"

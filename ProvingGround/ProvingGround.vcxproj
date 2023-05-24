@@ -94,7 +94,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers;$(SolutionDir)bin\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PGpch.hpp</PrecompiledHeaderFile>
@@ -106,7 +106,7 @@
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+      <Command>Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName) &gt; nul</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Message>Moving DLLs</Message>
@@ -125,7 +125,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers;$(SolutionDir)bin\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -140,7 +140,7 @@
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+      <Command>Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName) &gt; nul</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Message>Moving DLLs</Message>
@@ -157,7 +157,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers;$(SolutionDir)bin\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PGpch.hpp</PrecompiledHeaderFile>
@@ -169,7 +169,7 @@
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+      <Command>Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName) &gt; nul</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Message>Moving DLLs</Message>
@@ -188,7 +188,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers;$(SolutionDir)bin\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -203,7 +203,7 @@
       <AdditionalDependencies>Pulsar2DGameEngine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>Xcopy /E /Y $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)</Command>
+      <Command>Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName) &gt; nul</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Message>Moving DLLs</Message>

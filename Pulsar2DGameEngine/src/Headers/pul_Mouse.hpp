@@ -15,10 +15,10 @@ namespace pul
 		};
 
 		Mouse() = delete;
-		Mouse(const Mouse& other) = delete;
-		Mouse(Mouse&& other) = delete;
-		Mouse& operator= (const Mouse&& other) = delete;
-		Mouse& operator= (Mouse&& other) = delete;
+		Mouse(const Mouse&) = delete;
+		Mouse(Mouse&&) = delete;
+		Mouse& operator= (const Mouse&&) = delete;
+		Mouse& operator= (Mouse&&) = delete;
 		~Mouse() = delete;
 
 		static inline void handleEvent(const SDL_Event& e);

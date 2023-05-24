@@ -44,10 +44,7 @@ namespace eqx
 		 *
 		 * @returns Either 1 Or 0
 		 */
-		[[nodiscard]] static unsigned int flipCoin()
-		{
-			return randomNumber(0, 1);
-		}
+		[[nodiscard]] static inline unsigned int flipCoin();
 
 		/**
 		 * @brief Generate A Random Integral Type Number
@@ -59,22 +56,7 @@ namespace eqx
 		 *		In Range [lowerBound, upperBound]
 		 */
 		template <std::integral T>
-		[[nodiscard]] static T randomNumber(T lowerBound, T upperBound)
-		{
-			static auto dist =
-				std::uniform_int_distribution<T>(lowerBound, upperBound);
-
-			eqx::runtimeAssert(lowerBound < upperBound,
-				"Lower Bound Is Larger Than UpperBound!");
-
-			if (lowerBound != dist.min() || upperBound != dist.max())
-			{
-				dist = 
-					std::uniform_int_distribution<T>(lowerBound, upperBound);
-			}
-
-			return dist(s_Engine);
-		}
+		[[nodiscard]] static T randomNumber(T lowerBound, T upperBound);
 
 		/**
 		 * @brief Generate A Random Floating Point Type Number
@@ -93,55 +75,7 @@ namespace eqx
 		 *		In Range [lowerBound, upperBound]
 		 */
 		template <std::floating_point T>
-		[[nodiscard]] static T randomNumber(T lowerBound, T upperBound)
-		{
-			static auto dist = std::uniform_real_distribution<T>();
-
-			eqx::runtimeAssert(upperBound >= lowerBound,
-				"Lower Bound Is Larger Than UpperBound!");
-
-			if (lowerBound >= eqx::zero<T> && upperBound >= eqx::zero<T>)
-			{
-				auto prevErr = errno;
-				T decoyValue = std::nexttoward(lowerBound,
-					std::numeric_limits<T>::lowest());
-				errno = prevErr;
-				dist = std::uniform_real_distribution<T>(
-					decoyValue, upperBound);
-				double producedValue = dist(s_Engine);
-				if (producedValue == decoyValue)
-				{
-					return upperBound;
-				}
-				else
-				{
-					return producedValue;
-				}
-			}
-			else if (lowerBound <= eqx::zero<T> && upperBound <= eqx::zero<T>)
-			{
-				return -randomNumber(-upperBound, -lowerBound);
-			}
-			else if (lowerBound < eqx::zero<T> && upperBound > eqx::zero<T>)
-			{
-				T offset = (-upperBound - lowerBound) / static_cast<T>(2.0);
-				if (flipCoin())
-				{
-					return randomNumber(lowerBound + offset, eqx::zero<T>) - 
-						offset;
-				}
-				else
-				{
-					return randomNumber(eqx::zero<T>, upperBound + offset) - 
-						offset;
-				}
-			}
-			else
-			{
-				eqx::runtimeAssert(false, "Code Should Never Reach This!");
-				return eqx::zero<T>;
-			}
-		}
+		[[nodiscard]] static T randomNumber(T lowerBound, T upperBound);
 
 		/**
 		 * @brief Simulate A Dice Roll
@@ -150,26 +84,15 @@ namespace eqx
 		 * 
 		 * @returns An Unsigned Int In Range [1, sides]
 		 */
-		[[nodiscard]] static unsigned int rollDice(unsigned int sides = 6U)
-		{
-			eqx::runtimeAssert(sides > 2U,
-				"Dice Should Have At Least 3 Sides!");
-
-			return randomNumber(1U, sides);
-		}
+		[[nodiscard]] static unsigned int rollDice(unsigned int sides = 6U);
 
 		/**
 		 * @brief Generate A Random Seed
 		 * 
 		 * @returns Seed
 		 */
-		[[nodiscard]] static unsigned int generateSeed()
-		{
-			static std::random_device rd;
-			return static_cast<unsigned int>(rd());
-		}
-
-	private:
-		static inline auto s_Engine = std::mt19937_64(generateSeed());
+		[[nodiscard]] static unsigned int generateSeed();
 	};
 }
+
+#include "eqx_DefHeaders/eqx_RandomDef.hpp"

@@ -17,11 +17,6 @@
 
 #pragma once
 
-#include <type_traits>
-#include <concepts>
-#include <limits>
-#include <cmath>
-
 #include "eqx_Misc.hpp"
 
 namespace eqx
@@ -31,18 +26,19 @@ namespace eqx
 	 * @brief T Must Be A Floating Point Type
 	 */
 	template <std::floating_point T>
-	T constexpr pi_t = static_cast<T>(3.141592653589793238462643383279502884L);
+	inline constexpr T pi_t = 
+		static_cast<T>(3.141592653589793238462643383279502884L);
 
 	/**
 	 * @brief Pi Accurate To Double Precision
 	 */
-	double constexpr pi = pi_t<double>;
+	inline constexpr double pi = pi_t<double>;
 
 	/**
 	 * @brief Type Accurate Zero
 	 */
 	template <typename T>
-	T constexpr zero = static_cast<T>(0);
+	inline constexpr T zero = narrowCast<T>(0);
 
 	/**
 	 * @brief Check If Two Integer Types Are Equal
@@ -53,10 +49,7 @@ namespace eqx
 	 * @returns true If The Values Are Equal
 	 */
 	template <eqx::integer T>
-	[[nodiscard]] constexpr bool equals(T x, T y) noexcept
-	{
-		return x == y;
-	}
+	[[nodiscard]] constexpr bool equals(T x, T y) noexcept;
 
 	/**
 	 * @brief Check If Two Floating Point Types Are Equal Given Some Amount 
@@ -69,11 +62,8 @@ namespace eqx
 	 * @returns true If The Difference Is Less Than error
 	 */
 	template <std::floating_point T>
-	[[nodiscard]] bool 
-		equals(T x, T y, T error = static_cast<T>(0.001)) noexcept
-	{
-		return (std::abs(x - y) < error);
-	}
+	[[nodiscard]] bool equals(T x, T y, 
+		T error = static_cast<T>(0.001)) noexcept;
 
 	/**
 	 * @brief Checks The Sign Of A Given Value
@@ -85,21 +75,7 @@ namespace eqx
 	 *		Values Respectively
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] int constexpr getSign(T val) noexcept
-	{
-		if (val > eqx::zero<T>)
-		{
-			return 1;
-		}
-		else if (val < eqx::zero<T>)
-		{
-			return -1;
-		}
-		else
-		{
-			return 0;
-		}
-	}
+	[[nodiscard]] int constexpr getSign(T val) noexcept;
 
 	/**
 	 * @brief Check If A Value Is Positive, Note That 0 Is Not Positive
@@ -110,17 +86,7 @@ namespace eqx
 	 * @returns true If The Value Is Positive
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] bool constexpr isPositive(T val) noexcept
-	{
-		if (getSign(val) == 1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+	[[nodiscard]] bool constexpr isPositive(T val) noexcept;
 
 	/**
 	 * @brief Check If A Value Is Negative, Note That 0 Is Not Negative
@@ -131,17 +97,7 @@ namespace eqx
 	 * @returns true If The Value Is Negative
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] bool constexpr isNegative(T val) noexcept
-	{
-		if (getSign(val) == -1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+	[[nodiscard]] bool constexpr isNegative(T val) noexcept;
 
 	/**
 	 * @brief Check If Two Values Will Overflow By Addition
@@ -152,21 +108,7 @@ namespace eqx
 	 * @returns true If Overflow Would Occur
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] bool constexpr willOverflowAddition(T x, T y) noexcept
-	{
-		if (x >= eqx::zero<T> && y >= eqx::zero<T>)
-		{
-			return (std::numeric_limits<T>::max() - x) < y;
-		}
-		else if (x <= eqx::zero<T> && y <= eqx::zero<T>)
-		{
-			return (std::numeric_limits<T>::lowest() - x) > y;
-		}
-		else
-		{
-			return false;
-		}
-	}
+	[[nodiscard]] bool constexpr willOverflowAddition(T x, T y) noexcept;
 
 	/**
 	 * @brief Check If Two Values Will Overflow By Subtraction
@@ -177,17 +119,7 @@ namespace eqx
 	 * @returns true If Overflow Would Occur
 	 */
 	template <eqx::signedArithmetic T>
-	[[nodiscard]] bool constexpr willOverflowSubtraction(T x, T y) noexcept
-	{
-		if (y == std::numeric_limits<T>::lowest() && eqx::signedInteger<T>)
-		{
-			return true;
-		}
-		else
-		{
-			return willOverflowAddition(x, -y);
-		}
-	}
+	[[nodiscard]] bool constexpr willOverflowSubtraction(T x, T y) noexcept;
 
 	/**
 	 * @brief Check If Two Values Will Overflow By Subtraction
@@ -198,10 +130,7 @@ namespace eqx
 	 * @returns true If Overflow Would Occur
 	 */
 	template <eqx::unsignedInteger T>
-	[[nodiscard]] bool constexpr willOverflowSubtraction(T x, T y) noexcept
-	{
-		return y > x;
-	}
+	[[nodiscard]] bool constexpr willOverflowSubtraction(T x, T y) noexcept;
 
 	/**
 	 * @brief Compute The Distance Between Two One Dimensional Points
@@ -212,18 +141,7 @@ namespace eqx
 	 * @returns Distance Between Two One Dimensional Points
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] T distance(T x1, T x2) noexcept
-	{
-		if (x2 > x1)
-		{
-			std::swap(x1, x2);
-		}
-
-		eqx::runtimeAssert(!willOverflowSubtraction(x1, x2), 
-			"Arithmetic Overflow!");
-
-		return static_cast<T>(std::fabs(x1 - x2));
-	}
+	[[nodiscard]] T distance(T x1, T x2) noexcept;
 
 	/**
 	 * @brief Convert Degrees To Radians
@@ -234,10 +152,7 @@ namespace eqx
 	 * @returns double Equal To The Radian Equivalent Of degrees
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] double constexpr degreesToRadians(T degrees) noexcept
-	{
-		return static_cast<double>(degrees) * (eqx::pi / 180.0);
-	}
+	[[nodiscard]] double constexpr degreesToRadians(T degrees) noexcept;
 
 	/**
 	 * @brief Convert Radians To Degrees
@@ -248,10 +163,7 @@ namespace eqx
 	 * @returns double Equal To The Degree Equivalent Of radians
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] double constexpr radiansToDegrees(T radians) noexcept
-	{
-		return static_cast<double>(radians) * (180.0 / eqx::pi);
-	}
+	[[nodiscard]] double constexpr radiansToDegrees(T radians) noexcept;
 
 	/**
 	 * @brief Compute Both Arccosine Values
@@ -263,15 +175,7 @@ namespace eqx
 	 * @returns std::pair<double, double>, Values Are In Degrees
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] std::pair<double, double> arccos(T value) noexcept
-	{
-		eqx::runtimeAssert(value >= -1.0 && value <= 1.0, "Domain Error!");
-
-		std::pair<double, double> result;
-		result.first = eqx::radiansToDegrees(std::acos(value));
-		result.second = 360.0 - result.first;
-		return result;
-	}
+	[[nodiscard]] std::pair<double, double> arccos(T value) noexcept;
 
 	/**
 	 * @brief Compute Both Arcsine Values
@@ -283,15 +187,7 @@ namespace eqx
 	 * @returns std::pair<double, double>, Values Are In Degrees
 	 */
 	template <eqx::arithmetic T>
-	[[nodiscard]] std::pair<double, double> arcsin(T value) noexcept
-	{
-		eqx::runtimeAssert(value >= -1.0 && value <= 1.0, "Domain Error!");
-
-		std::pair<double, double> result;
-		result.first = eqx::radiansToDegrees(std::asin(value));
-		result.second = 180.0 - result.first;
-		result.first = result.first >= 0.0 ?
-			result.first : 360.0 + result.first;
-		return result;
-	}
+	[[nodiscard]] std::pair<double, double> arcsin(T value) noexcept;
 }
+
+#include "eqx_DefHeaders/eqx_MathematicsDef.hpp"

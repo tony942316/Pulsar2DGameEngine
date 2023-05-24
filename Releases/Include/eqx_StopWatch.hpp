@@ -42,36 +42,26 @@ namespace eqx
 		/**
 		 * @brief Starts StopWatch On Construction
 		 */
-		explicit StopWatch() noexcept
-		{
-			start();
-		}
+		explicit inline StopWatch() noexcept;
 
 		/**
 		 * Trivial Move And Copy Operation
 		 */
-		StopWatch(const StopWatch& other) = default;
-		StopWatch(StopWatch&& other) = default;
-		StopWatch& operator= (const StopWatch& other) = default;
-		StopWatch& operator= (StopWatch&& other) = default;
+		StopWatch(const StopWatch&) = default;
+		StopWatch(StopWatch&&) = default;
+		StopWatch& operator= (const StopWatch&) = default;
+		StopWatch& operator= (StopWatch&&) = default;
 		~StopWatch() = default;
 
 		/**
 		 * @brief Set The Start Time Of The StopWatch And Reset The End Time
 		 */
-		void start() noexcept
-		{
-			m_StartTime = std::chrono::steady_clock::now();
-			m_EndTime = m_StartTime;
-		}
+		inline void start() noexcept;
 
 		/**
 		 * @brief Set The End Time Of The StopWatch
 		 */
-		void stop() noexcept
-		{
-			m_EndTime = std::chrono::steady_clock::now();
-		}
+		inline void stop() noexcept;
 
 		/**
 		 * @brief Gives The std::chrono::duration<T> Between The Last
@@ -81,10 +71,7 @@ namespace eqx
 		 *		Call And this->stop Call
 		 */
 		template <timeUnit T = std::chrono::milliseconds>
-		[[nodiscard]] T getDuration() const noexcept
-		{
-			return std::chrono::duration_cast<T>(m_EndTime - m_StartTime);
-		}
+		[[nodiscard]] T getDuration() const noexcept;
 
 		/**
 		 * @brief Gives The Time Between The Last this->start Call And
@@ -94,10 +81,7 @@ namespace eqx
 		 *		The Last this->start Call And this->stop Call
 		 */
 		template <timeUnit T = std::chrono::milliseconds>
-		[[nodiscard]] long long getTime() const noexcept
-		{
-			return getDuration<T>().count();
-		}
+		[[nodiscard]] long long getTime() const noexcept;
 
 		/**
 		 * @brief Gives The Time Between The Last this->start Call And
@@ -108,14 +92,12 @@ namespace eqx
 		 *		The Last this->start Call The Current Time
 		 */
 		template <timeUnit T = std::chrono::milliseconds>
-		[[nodiscard]] long long readTime() noexcept
-		{
-			stop();
-			return getTime<T>();
-		}
+		[[nodiscard]] long long readTime() noexcept;
 
 	private:
 		std::chrono::time_point<std::chrono::steady_clock> m_StartTime, 
 			m_EndTime;
 	};
 }
+
+#include "eqx_DefHeaders/eqx_StopWatchDef.hpp"
