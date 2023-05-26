@@ -39,13 +39,13 @@ void Game::run()
 	pul::Window::init("Game Window", 1600, 1200);
 	pul::Window::setFrameRate(144);
 
-	s_Unit.setColor({ 180, 255, 255 });
+	s_Unit.setColor({ 180, 255, 255, 255 });
 	s_Mouse.setRotationSpeed(200.0);
 	s_Mouse.setRotationDirection(-1);
 	s_Mouse.setRotationTarget(1E20);
 	s_Mouse.setRotationPoint(eqx::Point<double>(25.0, 25.0));
 
-	s_Blade.setColor({ 0, 0, 255 });
+	s_Blade.setColor({ 0, 0, 255, 255 });
 	s_Blade.setRotationSpeed(1'000.0);
 	s_Blade.setRotationPoint(eqx::Point<double>(5.0, 125.0));
 

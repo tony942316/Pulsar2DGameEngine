@@ -30,7 +30,7 @@ namespace pul
 		inline void setTexture(Texture& texture) noexcept;
 		inline void setLocation(const eqx::Point<double>& point) noexcept;
 		inline void setDrawBox(const eqx::Rectangle<double>& rect) noexcept;
-		inline void setColor(const Texture::Color& rgb) noexcept;
+		inline void setColor(const Texture::Color& rgba) noexcept;
 
 		[[nodiscard]] inline eqx::Rectangle<double>& editDrawBox() noexcept;
 

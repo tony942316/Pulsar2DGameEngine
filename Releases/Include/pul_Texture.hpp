@@ -15,7 +15,7 @@ namespace pul
 	public:
 		struct Color
 		{
-			uint8_t r, g, b;
+			uint8_t r, g, b, a;
 		};
 
 		struct Config
@@ -24,7 +24,7 @@ namespace pul
 			double angle;
 			eqx::Point<double> rotationPoint;
 			SDL_RendererFlip flip;
-			Color rgb;
+			Color rgba;
 		};
 
 		explicit inline Texture() noexcept;

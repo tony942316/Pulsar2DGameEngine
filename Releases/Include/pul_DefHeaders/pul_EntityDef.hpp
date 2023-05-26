@@ -13,7 +13,7 @@ namespace pul
 		m_Texture(nullptr),
 		m_RenderConfiguration({ eqx::Rectangle<double>(0.0, 0.0, 0.0, 0.0),
 			0.0, eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE,
-			{ 255, 255, 255 } })
+			{ 255, 255, 255, 255 } })
 	{
 	}
 
@@ -29,7 +29,7 @@ namespace pul
 		m_Texture(&texture),
 		m_RenderConfiguration({ location, 0.0,
 			eqx::Point<double>(0.0, 0.0), SDL_FLIP_NONE,
-			{ 255, 255, 255 } })
+			{ 255, 255, 255, 255 } })
 	{
 	}
 
@@ -148,9 +148,9 @@ namespace pul
 		m_RenderConfiguration.destination = rect;
 	}
 
-	inline void Entity::setColor(const Texture::Color& rgb) noexcept
+	inline void Entity::setColor(const Texture::Color& rgba) noexcept
 	{
-		m_RenderConfiguration.rgb = rgb;
+		m_RenderConfiguration.rgba = rgba;
 	}
 
 	[[nodiscard]] inline eqx::Rectangle<double>& Entity::editDrawBox() noexcept
@@ -215,6 +215,6 @@ namespace pul
 	[[nodiscard]] inline const Texture::Color& 
 		Entity::getColor() const noexcept
 	{
-		return m_RenderConfiguration.rgb;
+		return m_RenderConfiguration.rgba;
 	}
 }

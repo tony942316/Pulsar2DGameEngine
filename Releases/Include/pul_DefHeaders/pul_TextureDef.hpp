@@ -152,7 +152,8 @@ namespace pul
 		};
 
 		if (SDL_SetTextureColorMod(m_SdlTexture,
-			config.rgb.r, config.rgb.g, config.rgb.b) == -1)
+			config.rgba.r, config.rgba.g, config.rgba.b) == -1 ||
+			SDL_SetTextureAlphaMod(m_SdlTexture, config.rgba.a) == -1)
 		{
 			std::cout << SDL_GetError() << std::endl;
 		}
@@ -165,7 +166,8 @@ namespace pul
 		}
 
 		if (SDL_SetTextureColorMod(m_SdlTexture,
-			255, 255, 255) == -1)
+			255, 255, 255) == -1 ||
+			SDL_SetTextureAlphaMod(m_SdlTexture, 255) == -1)
 		{
 			std::cout << SDL_GetError() << std::endl;
 		}
