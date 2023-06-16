@@ -19,59 +19,76 @@
 
 namespace eqx
 {
-	inline Benchmark::Benchmark(const std::function<void(void)>& func) 
-		noexcept(noexcept(func()))
-		:
-		m_Function(func),
-		m_Bench(std::chrono::nanoseconds())
+	template <typename Func, typename... Args>
+		requires std::invocable<Func, Args&&...>
+	void Benchmark::bench(Func& func, Args&&... args) 
+		noexcept(std::is_nothrow_invocable_v<Func, Args&&...>)
 	{
-	}
-
-	void inline Benchmark::bench() noexcept(noexcept(m_Function()))
-	{
-		StopWatch timer;
+		auto timer = StopWatch();
 		timer.start();
-		m_Function();
+		std::invoke(std::forward<Func>(func), std::forward<Args>(args)...);
 		timer.stop();
 		m_Bench = timer.getDuration<std::chrono::nanoseconds>();
 	}
 
-	void inline Benchmark::avgBench(int runs) noexcept(noexcept(m_Function()))
+	template <typename Func, typename... Args>
+		requires std::invocable<Func, Args&&...>
+	void Benchmark::avgBench(unsigned int runs, Func& func, Args&&... args) 
+		noexcept(std::is_nothrow_invocable_v<Func, Args&&...>)
 	{
-		StopWatch timer;
+		// Note mutating functions and args may pose issues...
+		auto timer = StopWatch();
 		timer.start();
-		for (int i = 0; i < runs; i++)
+		for (unsigned int i = 0U; i < runs; i++)
 		{
-			bench();
+			std::invoke(func, args...);
 		}
 		timer.stop();
 		m_Bench = static_cast<std::chrono::nanoseconds>(
 			timer.getTime<std::chrono::nanoseconds>() / runs);
 	}
 
-	template <eqx::timeUnit T>
+	template <typename Func, typename... Args>
+		requires std::invocable<Func, Args&&...>
+	Benchmark Benchmark::runBench(Func& func, Args&&... args)
+		noexcept(std::is_nothrow_invocable_v<Func, Args&&...>)
+	{
+		auto result = Benchmark();
+		result.bench(std::forward<Func>(func), std::forward<Args>(args)...);
+		return result;
+	}
+
+	template <typename Func, typename... Args>
+		requires std::invocable<Func, Args&&...>
+	Benchmark Benchmark::runAvgBench(unsigned int runs, Func& func,
+		Args&&... args)
+		noexcept(std::is_nothrow_invocable_v<Func, Args&&...>)
+	{
+		auto result = Benchmark();
+		result.avgBench(runs, std::forward<Func>(func), 
+			std::forward<Args>(args)...);
+		return result;
+	}
+
+	template <typename T>
+		requires TimeUnit<T>
+	[[nodiscard]] long long Benchmark::getBench() const noexcept
+	{
+		return std::chrono::duration_cast<T>(m_Bench).count();
+	}
+
+	template <typename T>
+		requires TimeUnit<T>
 	[[nodiscard]] std::string Benchmark::toString() const
 	{
-		auto result = std::string("");
-		result += "Bench: ";
-		result +=
-			std::to_string(std::chrono::duration_cast<T>(m_Bench).count());
-		if constexpr (std::same_as<T, std::chrono::nanoseconds>)
-		{
-			result += " ns";
-		}
-		else if constexpr (std::same_as<T, std::chrono::microseconds>)
-		{
-			result += " us";
-		}
-		else if constexpr (std::same_as<T, std::chrono::milliseconds>)
-		{
-			result += " ms";
-		}
-		else if constexpr (std::same_as<T, std::chrono::seconds>)
-		{
-			result += " s";
-		}
-		return result;
+		return std::format("Bench: {}", 
+			std::chrono::duration_cast<T>(m_Bench));
+	}
+
+	template <typename T>
+		requires TimeUnit<T>
+	[[nodiscard]] std::string toString(const Benchmark& benchmark)
+	{
+		return benchmark.toString<T>();
 	}
 }

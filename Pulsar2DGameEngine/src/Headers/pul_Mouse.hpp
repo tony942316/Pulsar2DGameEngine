@@ -1,7 +1,6 @@
 #pragma once
 
-#include <EquinoxSTD.hpp>
-#include <SDL.h>
+#include "pul_Dependencies.hpp"
 
 namespace pul
 {
@@ -10,8 +9,8 @@ namespace pul
 	public:
 		enum class Button
 		{
-			up,
-			down
+			Up,
+			Down
 		};
 
 		Mouse() = delete;
@@ -21,21 +20,26 @@ namespace pul
 		Mouse& operator= (Mouse&&) = delete;
 		~Mouse() = delete;
 
-		static inline void handleEvent(const SDL_Event& e);
-		static inline const eqx::Point<double>& getCurrentLocation();
-		static inline const eqx::Point<double>& getLeftClickDownLocation();
-		static inline const eqx::Point<double>& getLeftClickUpLocation();
-		static inline const eqx::Point<double>& getRightClickDownLocation();
-		static inline const eqx::Point<double>& getRightClickUpLocation();
+		static inline void handleEvent(const SDL_Event& e) noexcept;
+		[[nodiscard]] static inline const eqx::Point<double>& 
+			getCurrentLocation() noexcept;
+		[[nodiscard]] static inline const eqx::Point<double>& 
+			getLeftClickDownLocation() noexcept;
+		[[nodiscard]] static inline const eqx::Point<double>& 
+			getLeftClickUpLocation() noexcept;
+		[[nodiscard]] static inline const eqx::Point<double>& 
+			getRightClickDownLocation() noexcept;
+		[[nodiscard]] static inline const eqx::Point<double>& 
+			getRightClickUpLocation() noexcept;
 
 	private:
-		static inline auto m_CurrentLocation = eqx::Point<double>(),
+		constinit static inline auto m_CurrentLocation = eqx::Point<double>(),
 			m_LeftClickDownLocation = eqx::Point<double>(),
 			m_LeftClickUpLocation = eqx::Point<double>(),
 			m_RightClickDownLocation = eqx::Point<double>(),
 			m_RightClickUpLocation = eqx::Point<double>();
-		static inline auto m_LeftButtonState = Mouse::Button::up,
-			m_RightButtonState = Mouse::Button::up;
+		constinit static inline auto m_LeftButtonState = Mouse::Button::Up,
+			m_RightButtonState = Mouse::Button::Up;
 	};
 }
 

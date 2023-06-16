@@ -1,12 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <string_view>
+#include "pul_Dependencies.hpp"
 
-#include <EquinoxSTD.hpp>
-#include <SDL.h>
-#include <SDL_image.h>
+#include "pul_Window.hpp"
 
 namespace pul
 {
@@ -15,44 +11,77 @@ namespace pul
 	public:
 		struct Color
 		{
-			uint8_t r, g, b, a;
+			explicit constexpr Color() noexcept;
+			constexpr Color(std::uint8_t red, std::uint8_t green,
+				std::uint8_t blue, std::uint8_t alpha) noexcept;
+
+			Color(const Color&) = default;
+			Color(Color&&) = default;
+			Color& operator= (const Color&) = default;
+			Color& operator= (Color&&) = default;
+			~Color() = default;
+
+			std::uint8_t r, g, b, a;
 		};
 
 		struct Config
 		{
+			explicit constexpr Config() noexcept;
+			explicit constexpr Config(const eqx::Rectangle<double>& dest,
+				double ang, const eqx::Point<double>& rotP,
+				SDL_RendererFlip flp, const Color& col) noexcept;
+
+			Config(const Config&) = default;
+			Config(Config&&) = default;
+			Config& operator= (const Config&) = default;
+			Config& operator= (Config&&) = default;
+			~Config() = default;
+
 			eqx::Rectangle<double> destination;
 			double angle;
 			eqx::Point<double> rotationPoint;
 			SDL_RendererFlip flip;
-			Color rgba;
+			Color color;
 		};
 
-		explicit inline Texture() noexcept;
-		explicit inline Texture(SDL_Renderer* renderer, 
-			std::string_view filePath) noexcept;
+		explicit constexpr Texture() noexcept;
 
-		inline Texture(const Texture& other) noexcept;
-		inline Texture(Texture&& other) noexcept;
-		inline Texture& operator= (const Texture& other) noexcept;
-		inline Texture& operator= (Texture&& other) noexcept;
+		constexpr Texture(Texture&& other) noexcept;
+		constexpr Texture& operator= (Texture&& other) noexcept;
 
-		inline ~Texture() noexcept;
+		constexpr ~Texture() noexcept;
 
-		inline void setRenderer(SDL_Renderer* renderer) noexcept;
-		inline void loadFile(std::string_view filePath) noexcept;
+		Texture(const Texture&) = delete;
+		Texture& operator= (const Texture&) = delete;
 
 		inline void render(const eqx::Point<double>& location) const noexcept;
-		inline void 
-			render(const eqx::Rectangle<double>& destination) const noexcept;
+		inline void render(const eqx::Rectangle<double>& destination) 
+			const noexcept;
 		inline void render(const Config& config) const noexcept;
 
-	private:
+	protected:
 		int m_Width, m_Height;
-
-		std::string m_FilePath;
 
 		SDL_Texture* m_SdlTexture;
 		SDL_Renderer* m_Renderer;
+	};
+
+	class Sprite : public Texture
+	{
+	public:
+		inline void loadAsset(std::string_view spritePath) noexcept;
+	};
+
+	class Text : public Texture
+	{
+	public:
+		explicit inline 
+			Text(std::string_view text, std::string_view fontPath);
+
+		inline void loadFont(std::string_view fontPath) noexcept;
+
+	private:
+		std::string m_Text;
 	};
 }
 

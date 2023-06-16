@@ -17,33 +17,38 @@
 
 #pragma once
 
-#include <type_traits>
-#include <concepts>
-#include <limits>
-#include <cmath>
-
 namespace eqx
 {
-	template <eqx::integer T>
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr T abs(T val) noexcept
+	{
+		return val < zero<T> ? val * narrowCast<T>(-1) : val;
+	}
+
+	template <typename T>
+		requires Integer<T>
 	[[nodiscard]] constexpr bool equals(T x, T y) noexcept
 	{
 		return x == y;
 	}
 
-	template <std::floating_point T>
-	[[nodiscard]] bool equals(T x, T y, T error) noexcept
+	template <typename T>
+		requires std::floating_point<T>
+	[[nodiscard]] constexpr bool equals(T x, T y, T error) noexcept
 	{
-		return (std::abs(x - y) < error);
+		return (abs(x - y) < error);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] int constexpr getSign(T val) noexcept
 	{
-		if (val > eqx::zero<T>)
+		if (val > zero<T>)
 		{
 			return 1;
 		}
-		else if (val < eqx::zero<T>)
+		else if (val < zero<T>)
 		{
 			return -1;
 		}
@@ -53,40 +58,29 @@ namespace eqx
 		}
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] bool constexpr isPositive(T val) noexcept
 	{
-		if (getSign(val) == 1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return getSign(val) == 1;
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] bool constexpr isNegative(T val) noexcept
 	{
-		if (getSign(val) == -1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return getSign(val) == -1;
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] bool constexpr willOverflowAddition(T x, T y) noexcept
 	{
-		if (x >= eqx::zero<T> && y >= eqx::zero<T>)
+		if (x >= zero<T> && y >= zero<T>)
 		{
 			return (std::numeric_limits<T>::max() - x) < y;
 		}
-		else if (x <= eqx::zero<T> && y <= eqx::zero<T>)
+		else if (x <= zero<T> && y <= zero<T>)
 		{
 			return (std::numeric_limits<T>::lowest() - x) > y;
 		}
@@ -96,10 +90,11 @@ namespace eqx
 		}
 	}
 
-	template <eqx::signedArithmetic T>
+	template <typename T>
+		requires SignedArithmetic<T>
 	[[nodiscard]] bool constexpr willOverflowSubtraction(T x, T y) noexcept
 	{
-		if (y == std::numeric_limits<T>::lowest() && eqx::signedInteger<T>)
+		if (y == std::numeric_limits<T>::lowest() && SignedInteger<T>)
 		{
 			return true;
 		}
@@ -109,56 +104,62 @@ namespace eqx
 		}
 	}
 
-	template <eqx::unsignedInteger T>
+	template <typename T>
+		requires UnsignedInteger<T>
 	[[nodiscard]] bool constexpr willOverflowSubtraction(T x, T y) noexcept
 	{
 		return y > x;
 	}
 
-	template <eqx::arithmetic T>
-	[[nodiscard]] T distance(T x1, T x2) noexcept
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr T distance(T x1, T x2) noexcept
 	{
 		if (x2 > x1)
 		{
 			std::swap(x1, x2);
 		}
 
-		eqx::runtimeAssert(!willOverflowSubtraction(x1, x2),
+		runtimeAssert(!willOverflowSubtraction(x1, x2),
 			"Arithmetic Overflow!");
 
-		return static_cast<T>(std::fabs(x1 - x2));
+		return abs(x1 - x2);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] double constexpr degreesToRadians(T degrees) noexcept
 	{
-		return static_cast<double>(degrees) * (eqx::pi / 180.0);
+		return static_cast<double>(degrees) * (std::numbers::pi / 180.0);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] double constexpr radiansToDegrees(T radians) noexcept
 	{
-		return static_cast<double>(radians) * (180.0 / eqx::pi);
+		return static_cast<double>(radians) * (180.0 / std::numbers::pi);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] std::pair<double, double> arccos(T value) noexcept
 	{
-		eqx::runtimeAssert(value >= -1.0 && value <= 1.0, "Domain Error!");
+		runtimeAssert(value >= -1.0 && value <= 1.0, "Domain Error!");
 
 		std::pair<double, double> result;
-		result.first = eqx::radiansToDegrees(std::acos(value));
+		result.first = radiansToDegrees(std::acos(value));
 		result.second = 360.0 - result.first;
 		return result;
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] std::pair<double, double> arcsin(T value) noexcept
 	{
-		eqx::runtimeAssert(value >= -1.0 && value <= 1.0, "Domain Error!");
+		runtimeAssert(value >= -1.0 && value <= 1.0, "Domain Error!");
 
 		std::pair<double, double> result;
-		result.first = eqx::radiansToDegrees(std::asin(value));
+		result.first = radiansToDegrees(std::asin(value));
 		result.second = 180.0 - result.first;
 		result.first = result.first >= 0.0 ?
 			result.first : 360.0 + result.first;

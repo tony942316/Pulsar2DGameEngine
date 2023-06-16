@@ -2,35 +2,34 @@
 
 namespace pul
 {
-	inline void Mouse::handleEvent(const SDL_Event& e)
+	inline void Mouse::handleEvent(const SDL_Event& e) noexcept
 	{
 		switch (e.type)
 		{
 		case SDL_MOUSEMOTION:
-			m_CurrentLocation.x = static_cast<double>(e.motion.x);
-			m_CurrentLocation.y = static_cast<double>(e.motion.y);
+			m_CurrentLocation = eqx::Point<double>(e.motion.x, e.motion.y);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (e.button.button == SDL_BUTTON_LEFT)
 			{
-				m_LeftButtonState = Mouse::Button::down;
+				m_LeftButtonState = Mouse::Button::Down;
 				m_LeftClickDownLocation = m_CurrentLocation;
 			}
 			else if (e.button.button == SDL_BUTTON_RIGHT)
 			{
-				m_RightButtonState = Mouse::Button::down;
+				m_RightButtonState = Mouse::Button::Down;
 				m_RightClickDownLocation = m_CurrentLocation;
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (e.button.button == SDL_BUTTON_LEFT)
 			{
-				m_LeftButtonState = Mouse::Button::up;
+				m_LeftButtonState = Mouse::Button::Up;
 				m_LeftClickUpLocation = m_CurrentLocation;
 			}
 			else if (e.button.button == SDL_BUTTON_RIGHT)
 			{
-				m_RightButtonState = Mouse::Button::up;
+				m_RightButtonState = Mouse::Button::Up;
 				m_RightClickUpLocation = m_CurrentLocation;
 			}
 			break;
@@ -39,27 +38,32 @@ namespace pul
 		}
 	}
 
-	inline const eqx::Point<double>& Mouse::getCurrentLocation()
+	[[nodiscard]] inline const eqx::Point<double>& 
+		Mouse::getCurrentLocation() noexcept
 	{
 		return m_CurrentLocation;
 	}
 
-	inline const eqx::Point<double>& Mouse::getLeftClickDownLocation()
+	[[nodiscard]] inline const eqx::Point<double>& 
+		Mouse::getLeftClickDownLocation() noexcept
 	{
 		return m_LeftClickDownLocation;
 	}
 
-	inline const eqx::Point<double>& Mouse::getLeftClickUpLocation()
+	[[nodiscard]] inline const eqx::Point<double>& 
+		Mouse::getLeftClickUpLocation() noexcept
 	{
 		return m_LeftClickUpLocation;
 	}
 
-	inline const eqx::Point<double>& Mouse::getRightClickDownLocation()
+	[[nodiscard]] inline const eqx::Point<double>& 
+		Mouse::getRightClickDownLocation() noexcept
 	{
 		return m_RightClickDownLocation;
 	}
 
-	inline const eqx::Point<double>& Mouse::getRightClickUpLocation()
+	[[nodiscard]] inline const eqx::Point<double>& 
+		Mouse::getRightClickUpLocation() noexcept
 	{
 		return m_RightClickUpLocation;
 	}

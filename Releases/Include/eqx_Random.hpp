@@ -17,9 +17,7 @@
 
 #pragma once
 
-#include <random>
-#include <type_traits>
-#include <concepts>
+#include "eqx_Dependencies.hpp"
 
 #include "eqx_Misc.hpp"
 #include "eqx_Mathematics.hpp"
@@ -55,7 +53,8 @@ namespace eqx
 		 * @returns Random Integral Type Number
 		 *		In Range [lowerBound, upperBound]
 		 */
-		template <std::integral T>
+		template <typename T>
+			requires std::integral<T>
 		[[nodiscard]] static T randomNumber(T lowerBound, T upperBound);
 
 		/**
@@ -74,7 +73,8 @@ namespace eqx
 		 * @returns Random Floating Point Type Number
 		 *		In Range [lowerBound, upperBound]
 		 */
-		template <std::floating_point T>
+		template <typename T>
+			requires std::floating_point<T>
 		[[nodiscard]] static T randomNumber(T lowerBound, T upperBound);
 
 		/**
@@ -84,14 +84,15 @@ namespace eqx
 		 * 
 		 * @returns An Unsigned Int In Range [1, sides]
 		 */
-		[[nodiscard]] static unsigned int rollDice(unsigned int sides = 6U);
+		[[nodiscard]] static inline unsigned int 
+			rollDice(unsigned int sides = 6U);
 
 		/**
 		 * @brief Generate A Random Seed
 		 * 
 		 * @returns Seed
 		 */
-		[[nodiscard]] static unsigned int generateSeed();
+		[[nodiscard]] static inline unsigned int generateSeed();
 	};
 }
 

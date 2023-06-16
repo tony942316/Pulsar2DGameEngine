@@ -17,15 +17,10 @@
 
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <string_view>
-#include <source_location>
-
-#include <array>
+#include "eqx_Dependencies.hpp"
 
 #include "eqx_SuperEnum.hpp"
+#include "eqx_Misc.hpp"
 
 namespace eqx
 {
@@ -36,7 +31,7 @@ namespace eqx
 	{
 	public:
 		/**
-		 * Pure Static Class Is Not Ment To Be Constructed Or Copied
+		 * Pure Static Class Is Not Meant To Be Constructed Or Copied
 		 */
 		Log() = delete;
 		Log(const Log&) = delete;
@@ -54,7 +49,7 @@ namespace eqx
 			Warning,
 			Error,
 			None
-		)
+		);
 
 		/**
 		 * @brief Type Of A Log
@@ -66,7 +61,21 @@ namespace eqx
 			RuntimeError,
 			OverflowError,
 			UnreachableCodeError
-		)
+		);
+
+		/**
+		 * @brief Activate The Logger
+		 * 
+		 * @param outStream Stream To Write Logs To
+		 * @param outFile File Name To Write Logs To
+		 */
+		static inline void init(std::ostream* outStream = &std::clog,
+			std::string_view outFile = "Log.txt");
+
+		/**
+		 * @brief Check If init Has Been Called
+		 */
+		[[nodiscard]] static inline bool isInit() noexcept;
 
 		/**
 		 * @brief Log A Message To The Active Stream And File
@@ -82,7 +91,7 @@ namespace eqx
 
 		/**
 		 * @brief Set Level Of Logs To Be Output i.e.
-		 * warning Will Output warnings And errors But Not info
+		 *		warning Will Output warnings And errors But Not info
 		 * 
 		 * @param level Cutoff i.e. all -> info -> warning -> error -> none
 		 */
@@ -93,7 +102,7 @@ namespace eqx
 		 * 
 		 * @param stream The New Output Stream
 		*/
-		static inline void setOutputStream(std::ostream& stream) noexcept;
+		static inline void setOutputStream(std::ostream* stream) noexcept;
 
 		/**
 		 * @brief Set The File Logs Are Written To
@@ -149,16 +158,16 @@ namespace eqx
 		 * 
 		 * @returns std::vector Of Loggable Levels
 		 */
-		[[nodiscard]] static constexpr std::array<eqx::Log::Level, 3ULL>
+		[[nodiscard]] static constexpr std::array<Log::Level, 3ULL>
 			getLoggableLevels() noexcept;
 
 	private:
-		static inline auto s_LogFile = std::ofstream("Log.txt",
-			std::ios::out | std::ios::trunc);
-		static inline auto* s_OutputStream = &std::clog;
-		static inline auto s_LogLevel = Level::None;
-		static inline auto s_LastErrorType = Type::None;
-		static inline auto s_LastMessage = std::string("");
+		constinit static inline auto s_OutputStream = nullp<std::ostream>;
+		constinit static inline auto s_LogFile = nullp<std::ofstream>;
+		constinit static inline auto s_LogLevel = Level::None;
+		constinit static inline auto s_LastErrorType = Type::None;
+		constinit static inline auto s_LastMessage = nullp<std::string>;
+		constinit static inline auto s_IsInit = false;
 	};
 }
 

@@ -24,14 +24,15 @@ namespace eqx
 		return randomNumber(0, 1);
 	}
 
-	template <std::integral T>
+	template <typename T>
+		requires std::integral<T>
 	[[nodiscard]] T Random::randomNumber(T lowerBound, T upperBound)
 	{
 		static auto dist =
 			std::uniform_int_distribution<T>(lowerBound, upperBound);
 		static auto engine = std::mt19937_64(generateSeed());
 
-		eqx::runtimeAssert(lowerBound < upperBound,
+		runtimeAssert(lowerBound < upperBound,
 			"Lower Bound Is Larger Than UpperBound!");
 
 		if (lowerBound != dist.min() || upperBound != dist.max())
@@ -43,16 +44,17 @@ namespace eqx
 		return dist(engine);
 	}
 
-	template <std::floating_point T>
+	template <typename T>
+		requires std::floating_point<T>
 	[[nodiscard]] T Random::randomNumber(T lowerBound, T upperBound)
 	{
 		static auto dist = std::uniform_real_distribution<T>();
 		static auto engine = std::mt19937_64(generateSeed());
 
-		eqx::runtimeAssert(upperBound >= lowerBound,
+		runtimeAssert(upperBound >= lowerBound,
 			"Lower Bound Is Larger Than UpperBound!");
 
-		if (lowerBound >= eqx::zero<T> && upperBound >= eqx::zero<T>)
+		if (lowerBound >= zero<T> && upperBound >= zero<T>)
 		{
 			auto prevErr = errno;
 			T decoyValue = std::nexttoward(lowerBound,
@@ -70,34 +72,34 @@ namespace eqx
 				return producedValue;
 			}
 		}
-		else if (lowerBound <= eqx::zero<T> && upperBound <= eqx::zero<T>)
+		else if (lowerBound <= zero<T> && upperBound <= zero<T>)
 		{
 			return -randomNumber(-upperBound, -lowerBound);
 		}
-		else if (lowerBound < eqx::zero<T> && upperBound > eqx::zero<T>)
+		else if (lowerBound < zero<T> && upperBound > zero<T>)
 		{
 			T offset = (-upperBound - lowerBound) / static_cast<T>(2.0);
 			if (flipCoin())
 			{
-				return randomNumber(lowerBound + offset, eqx::zero<T>) -
+				return randomNumber(lowerBound + offset, zero<T>) -
 					offset;
 			}
 			else
 			{
-				return randomNumber(eqx::zero<T>, upperBound + offset) -
+				return randomNumber(zero<T>, upperBound + offset) -
 					offset;
 			}
 		}
 		else
 		{
-			eqx::runtimeAssert(false, "Code Should Never Reach This!");
-			return eqx::zero<T>;
+			runtimeAssert(false, "Code Should Never Reach This!");
+			return zero<T>;
 		}
 	}
 
 	[[nodiscard]] inline unsigned int Random::rollDice(unsigned int sides)
 	{
-		eqx::runtimeAssert(sides > 2U,
+		runtimeAssert(sides > 2U,
 			"Dice Should Have At Least 3 Sides!");
 
 		return randomNumber(1U, sides);

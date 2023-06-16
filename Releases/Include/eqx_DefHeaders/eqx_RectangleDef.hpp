@@ -19,14 +19,16 @@
 
 namespace eqx
 {
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	constexpr Rectangle<T>::Rectangle() noexcept
 		:
-		Rectangle(eqx::zero<T>, eqx::zero<T>, eqx::zero<T>, eqx::zero<T>)
+		Rectangle(zero<T>, zero<T>, zero<T>, zero<T>)
 	{
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	constexpr Rectangle<T>::Rectangle(T x, T y, T w, T h) noexcept
 		:
 		x(x),
@@ -36,77 +38,103 @@ namespace eqx
 	{
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr bool
 		Rectangle<T>::operator== (const Rectangle<T>& other) const noexcept
 	{
-		return equals(*this, other);
+		return equals(x, other.x) &&
+			equals(y, other.y) &&
+			equals(w, other.w) &&
+			equals(h, other.h);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr bool
 		Rectangle<T>::operator!= (const Rectangle<T>& other) const noexcept
 	{
 		return !(*this == other);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr void 
+		Rectangle<T>::setLocation(const eqx::Point<T>& point) noexcept
+	{
+		x = point.x;
+		y = point.y;
+	}
+
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr Point<T> Rectangle<T>::getLocation() const noexcept
 	{
 		return getTopLeftPoint();
 	}
 
-	template <eqx::arithmetic T>
-	[[nodiscard]] constexpr Point<T> 
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr Point<T>
 		Rectangle<T>::getTopLeftPoint() const noexcept
 	{
 		return Point<T>(x, y);
 	}
 
-	template <eqx::arithmetic T>
-	[[nodiscard]] constexpr Point<T> 
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr Point<T>
 		Rectangle<T>::getTopRightPoint() const noexcept
 	{
-		return eqx::Point<T>(x + w, y);
+		return Point<T>(x + w, y);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr Point<T>
 		Rectangle<T>::getBottomLeftPoint() const noexcept
 	{
-		return eqx::Point<T>(x, y + h);
+		return Point<T>(x, y + h);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr Point<T>
 		Rectangle<T>::getBottomRightPoint() const noexcept
 	{
-		return eqx::Point<T>(x + w, y + h);
+		return Point<T>(x + w, y + h);
 	}
 
-	template <eqx::arithmetic T>
-	[[nodiscard]] constexpr Point<T> 
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr Point<T>
 		Rectangle<T>::getCenterPoint() const noexcept
 	{
 		auto dx = static_cast<T>(w * 0.5);
 		auto dy = static_cast<T>(h * 0.5);
-		return eqx::Point<T>(x + dx, y + dy);
+		return Point<T>(x + dx, y + dy);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr Point<T> 
+		Rectangle<T>::getEmplaceCenter(const Rectangle<T>& other) 
+		const noexcept
+	{
+		runtimeAssert(other.w < w && other.h < h,
+			"Other Rectangle Is Wider Or Taller Than Source!");
+
+		return eqx::Point<T>(narrowCast<T>(x + 0.5 * (w - other.w)),
+			narrowCast<T>(y + 0.5 * (h - other.h)));
+	}
+
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] std::string Rectangle<T>::toString() const
 	{
-		auto res = std::string("");
-		res += "(";
-		res += std::to_string(x);
-		res += ", ";
-		res += std::to_string(y);
-		res += ", ";
-		res += std::to_string(w);
-		res += ", ";
-		res += std::to_string(h);
-		res += ")";
-		return res;
+		return std::format("({}, {}, {}, {})",
+			eqx::toString(x), eqx::toString(y),
+			eqx::toString(w), eqx::toString(h));
 	}
 
 	template <typename T>
@@ -115,7 +143,8 @@ namespace eqx
 		return rect.toString();
 	}
 
-	template <std::floating_point T>
+	template <typename T>
+		requires std::floating_point<T>
 	[[nodiscard]] constexpr bool equals(const Rectangle<T>& rect1,
 		const Rectangle<T>& rect2, double error) noexcept
 	{
@@ -125,14 +154,12 @@ namespace eqx
 			equals(rect1.h, rect2.h, error);
 	}
 
-	template <eqx::integer T>
+	template <typename T>
+		requires Integer<T>
 	[[nodiscard]] constexpr bool equals(const Rectangle<T>& rect1,
 		const Rectangle<T>& rect2) noexcept
 	{
-		return equals(rect1.x, rect2.x) &&
-			equals(rect1.y, rect2.y) &&
-			equals(rect1.w, rect2.w) &&
-			equals(rect1.h, rect2.h);
+		return rect1 == rect2;
 	}
 
 	template <typename T>
@@ -201,5 +228,12 @@ namespace eqx
 		{
 			return true;
 		}
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr void emplaceCenter(const Rectangle<T>& source,
+		Rectangle<T>& toMove) noexcept
+	{
+		toMove.setLocation(source.getEmplaceCenter(toMove));
 	}
 }

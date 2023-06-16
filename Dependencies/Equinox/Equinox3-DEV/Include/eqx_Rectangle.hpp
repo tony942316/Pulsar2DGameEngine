@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <string>
+#include "eqx_Dependencies.hpp"
 
 #include "eqx_Misc.hpp"
 #include "eqx_Point.hpp"
@@ -31,7 +31,8 @@ namespace eqx
 	 *		Act As If They Are In Screen Space i.e. The Height Of The
 	 *		Rectangle Is Directed Downwards
 	 */
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	class Rectangle
 	{
 	public:
@@ -81,6 +82,14 @@ namespace eqx
 			operator!= (const Rectangle<T>& other) const noexcept;
 
 		/**
+		 * @brief x = point.x, y = point.y
+		 * 
+		 * @param point Location To Set Our Rectangle
+		 */
+		[[nodiscard]] constexpr void setLocation(const eqx::Point<T>& point)
+			noexcept;
+
+		/**
 		 * @brief Create A Point At (X, Y), Note That This Is An
 		 *		Alias For GetTopLeftPoint()
 		 * 
@@ -122,7 +131,18 @@ namespace eqx
 		 * 
 		 * @returns eqx::Point<T> Representing The Center Point
 		 */
-		[[nodiscard]] constexpr eqx::Point<T> getCenterPoint() const noexcept;
+		[[nodiscard]] constexpr Point<T> getCenterPoint() const noexcept;
+
+		/**
+		 * @brief Create A Point Where other Rectangle Is Perfectly Centered
+		 * 
+		 * @param other Square To Center
+		 * 
+		 * @returns eqx::Point<T> Representing Where The other Rectangle
+		 *		Would Need To Be Located To Center It
+		 */
+		[[nodiscard]] constexpr Point<T> 
+			getEmplaceCenter(const Rectangle<T>& other) const noexcept;
 
 		/**
 		 * @brief Creates Printable String Of Form "(x, y, w, h)"
@@ -145,11 +165,28 @@ namespace eqx
 	template <typename T>
 	[[nodiscard]] std::string toString(const Rectangle<T>& rect);
 
-	template <std::floating_point T>
+	/**
+	 * @brief Compares Two eqx::Rectangles To Each Other Within A
+	 *		Given Tolerance
+	 *
+	 * @param rect1, rect2 Rectangles Compared
+	 *
+	 * @returns true If Rectanges Are Equivalent
+	 */
+	template <typename T>
+		requires std::floating_point<T>
 	[[nodiscard]] constexpr bool equals(const Rectangle<T>& rect1,
 		const Rectangle<T>& rect2, double error = 0.001) noexcept;
 
-	template <eqx::integer T>
+	/**
+	 * @brief Compares Two eqx::Rectangles To Each Other
+	 *
+	 * @param rect1, rect2 Rectangles Compared
+	 *
+	 * @returns true If Rectanges Are Equivalent
+	 */
+	template <typename T>
+		requires Integer<T>
 	[[nodiscard]] constexpr bool equals(const Rectangle<T>& rect1,
 		const Rectangle<T>& rect2) noexcept;
 
@@ -200,6 +237,16 @@ namespace eqx
 	template <typename T>
 	[[nodiscard]] constexpr bool intersectExclusive(const Rectangle<T>& rect1,
 		const Rectangle<T>& rect2) noexcept;
+
+	/**
+	 * @brief Move A Rectangle To Be Centered In Another Rectangle
+	 *
+	 * @param source Larger Rectangle To Place Smaller Rectangle In
+	 * @param toMove Rectangle Centered In The source Rectangle
+	 */
+	template <typename T>
+	[[nodiscard]] constexpr void emplaceCenter(const Rectangle<T>& source, 
+		Rectangle<T>& toMove) noexcept;
 }
 
 /**

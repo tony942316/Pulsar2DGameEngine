@@ -17,8 +17,7 @@
 
 #pragma once
 
-#include <functional>
-#include <chrono>
+#include "eqx_Dependencies.hpp"
 
 #include "eqx_StopWatch.hpp"
 
@@ -28,17 +27,9 @@ namespace eqx
 	{
 	public:
 		/**
-		 * @brief Construct Benchmark With A Function To Test
-		 * 
-		 * @param function The Function To Be Tested
+		 * Trivial Operation
 		 */
-		explicit inline 
-			Benchmark(const std::function<void(void)>& func) 
-			noexcept(noexcept(func()));
-
-		/**
-		 * Trivial Move And Copy Operation
-		 */
+		Benchmark() = default;
 		Benchmark(const Benchmark&) = default;
 		Benchmark(Benchmark&&) = default;
 		Benchmark& operator= (const Benchmark&) = default;
@@ -47,16 +38,59 @@ namespace eqx
 
 		/**
 		 * @brief Time How Long It Takes To Run The Function
+		 * 
+		 * @param func Function To Be Invoked
+		 * @param args Arguments func Is Invoked On
 		 */
-		void inline bench() noexcept(noexcept(m_Function()));
+		template <typename Func, typename... Args>
+			requires std::invocable<Func, Args&&...>
+		void bench(Func& func, Args&&... args) 
+			noexcept(std::is_nothrow_invocable_v<Func, Args&&...>);
 
 		/**
 		 * @brief Time How Long It Takes To Run The Function On Average
 		 * 
 		 * @param runs The Number Of Times The Function Is Run
+		 * @param func Function To Be Invoked
+		 * @param args Arguments func Is Invoked On
 		 */
-		void inline 
-			avgBench(int runs = 1'000) noexcept(noexcept(m_Function()));
+		template <typename Func, typename... Args>
+			requires std::invocable<Func, Args&&...>
+		void avgBench(unsigned int runs, Func& func, Args&&... args) 
+			noexcept(std::is_nothrow_invocable_v<Func, Args&&...>);
+
+		/**
+		 * @brief Time How Long It Takes To Run The Function
+		 * 
+		 * @param func Function To Be Invoked
+		 * @param args Arguments func Is Invoked On
+		 */
+		template <typename Func, typename... Args>
+			requires std::invocable<Func, Args&&...>
+		static Benchmark runBench(Func& func, Args&&... args)
+			noexcept(std::is_nothrow_invocable_v<Func, Args&&...>);
+
+		/**
+		 * @brief Time How Long It Takes To Run The Function On Average
+		 * 
+		 * @param runs The Number Of Times The Function Is Run
+		 * @param func Function To Be Invoked
+		 * @param args Arguments func Is Invoked On
+		 */
+		template <typename Func, typename... Args>
+			requires std::invocable<Func, Args&&...>
+		static Benchmark runAvgBench(unsigned int runs, Func& func, 
+			Args&&... args)
+			noexcept(std::is_nothrow_invocable_v<Func, Args&&...>);
+
+		/**
+		 * @brief Get Result Of Last Benchmark In T Units
+		 * 
+		 * @returns T Units Of Last Benchmark
+		 */
+		template <typename T = std::chrono::milliseconds>
+			requires TimeUnit<T>
+		[[nodiscard]] long long getBench() const noexcept;
 
 		/**
 		 * @brief Build A String Representing The Time It Took To Run
@@ -64,13 +98,22 @@ namespace eqx
 		 * 
 		 * @returns std::string Of Form "Bench: X TimeUnits"
 		 */
-		template <eqx::timeUnit T = std::chrono::milliseconds>
+		template <typename T = std::chrono::milliseconds>
+			requires TimeUnit<T>
 		[[nodiscard]] std::string toString() const;
 
 	private:
-		std::function<void(void)> m_Function;
 		std::chrono::nanoseconds m_Bench;
 	};
+
+	/**
+	 * @brief Build A String Representing A eqx::Benchmark
+	 * 
+	 * @returns std::string Of Form "Bench: X TimeUnits"
+	 */
+	template <typename T = std::chrono::milliseconds>
+		requires TimeUnit<T>
+	[[nodiscard]] std::string toString(const Benchmark& benchmark);
 }
 
 #include "eqx_DefHeaders/eqx_BenchmarkDef.hpp"

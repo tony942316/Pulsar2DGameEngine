@@ -19,14 +19,16 @@
 
 namespace eqx
 {
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	constexpr Point<T>::Point() noexcept
 		:
-		Point(eqx::zero<T>, eqx::zero<T>)
+		Point(zero<T>, zero<T>)
 	{
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	constexpr Point<T>::Point(T x, T y) noexcept
 		:
 		x(x),
@@ -34,70 +36,103 @@ namespace eqx
 	{
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr Point<T> 
 		Point<T>::operator+ (const Point<T>& other) const noexcept
 	{
 		return Point<T>(x + other.x, y + other.y);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr Point<T>
 		Point<T>::operator- (const Point<T>& other) const noexcept
 	{
 		return Point<T>(x - other.x, y - other.y);
 	}
 
-	template <eqx::arithmetic T>
-	constexpr Point<T> Point<T>::operator+= (const Point<T>& other) noexcept
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr Point<T> Point<T>::operator* (T scaler) const
+		noexcept
+	{
+		return Point<T>(x * scaler, y * scaler);
+	}
+
+	template <typename T>
+		requires Arithmetic<T>
+	[[nodiscard]] constexpr Point<T> Point<T>::operator/ (T scaler) const
+		noexcept
+	{
+		runtimeAssert(scaler != 0.0, "Division By Zero");
+		return Point<T>(x / scaler, y / scaler);
+	}
+
+	template <typename T>
+		requires Arithmetic<T>
+	constexpr Point<T>& Point<T>::operator+= (const Point<T>& other) noexcept
 	{
 		return *this = *this + other;
 	}
 
-	template <eqx::arithmetic T>
-	constexpr Point<T> Point<T>::operator-= (const Point<T>& other) noexcept
+	template <typename T>
+		requires Arithmetic<T>
+	constexpr Point<T>& Point<T>::operator-= (const Point<T>& other) noexcept
 	{
 		return *this = *this - other;
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
+	constexpr Point<T>& Point<T>::operator*= (T scaler) noexcept
+	{
+		return *this = *this * scaler;
+	}
+
+	template <typename T>
+		requires Arithmetic<T>
+	constexpr Point<T>& Point<T>::operator/= (T scaler) noexcept
+	{
+		return *this = *this / scaler;
+	}
+
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr bool
 		Point<T>::operator== (const Point<T>& other) const noexcept
 	{
-		return equals(*this, other);
+		return equals(x, other.x) && equals(y, other.y);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] constexpr bool
 		Point<T>::operator!= (const Point<T>& other) const noexcept
 	{
 		return !(*this == other);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] T Point<T>::distanceTo(const Point<T>& other) const noexcept
 	{
-		eqx::runtimeAssert(errno == 0, "Previous errno Failure Detected!");
+		runtimeAssert(errno == 0, "Previous errno Failure Detected!");
 
 		const auto dx = static_cast<double>(distance(x, other.x));
 		const auto dy = static_cast<double>(distance(y, other.y));
 		const auto result = std::hypot(dx, dy);
 
-		eqx::runtimeAssert(errno != ERANGE, "errno == ERANGE!");
+		runtimeAssert(errno != ERANGE, "errno == ERANGE!");
 
 		return static_cast<T>(result);
 	}
 
-	template <eqx::arithmetic T>
+	template <typename T>
+		requires Arithmetic<T>
 	[[nodiscard]] std::string Point<T>::toString() const
 	{
-		auto res = std::string("");
-		res += "(";
-		res += std::to_string(x);
-		res += ", ";
-		res += std::to_string(y);
-		res += ")";
-		return res;
+		return std::format("({}, {})", eqx::toString(x), eqx::toString(y));
 	}
 
 	template <typename T>
@@ -106,7 +141,8 @@ namespace eqx
 		return point.toString();
 	}
 
-	template <std::floating_point T>
+	template <typename T>
+		requires std::floating_point<T>
 	[[nodiscard]] constexpr bool equals(const Point<T>& point1,
 		const Point<T>& point2, double error) noexcept
 	{
@@ -114,11 +150,12 @@ namespace eqx
 			equals(point1.y, point2.y, error);
 	}
 
-	template <eqx::integer T>
+	template <typename T>
+		requires Integer<T>
 	[[nodiscard]] constexpr bool equals(const Point<T>& point1,
 		const Point<T>& point2) noexcept
 	{
-		return equals(point1.x, point2.x) && equals(point1.y, point2.y);
+		return point1 == point2;
 	}
 
 	template <typename T>
@@ -128,30 +165,53 @@ namespace eqx
 		return point1.distanceTo(point2);
 	}
 
-	template <std::floating_point T>
+	template <typename T>
+		requires std::floating_point<T>
 	[[nodiscard]] Point<T> normalize(const Point<T>& point) noexcept
 	{
-		constexpr auto origin = Point<T>();
-
-		auto dist = eqx::distance(origin, point);
-
-		auto result = dist != eqx::zero<T> ?
-			Point<T>(point.x / dist, point.y / dist) :
-			Point<T>();
-		return result;
+		if (point == Point<T>())
+		{
+			return Point<T>();
+		}
+		else
+		{
+			return point / distance(Point<T>(), point);
+		}
 	}
 
 	template <typename T>
 	[[nodiscard]] double angle(const Point<T>& point) noexcept
 	{
-		const auto normPoint = eqx::normalize(point);
-		const auto sinVals = eqx::arcsin(normPoint.y);
-		const auto cosVals = eqx::arccos(normPoint.x);
+		const auto normPoint = normalize(point);
+		const auto sinVals = arcsin(normPoint.y);
+		const auto cosVals = arccos(normPoint.x);
 
 		auto correctValue = equals(sinVals.first, cosVals.first) ||
 			equals(sinVals.second, cosVals.second) ?
 			sinVals.first : sinVals.second;
 
 		return correctValue;
+	}
+
+	template <typename T>
+		requires std::integral<T>
+	[[nodiscard]] constexpr T coordToIndex(const Point<T>& coord, T rowLength) 
+		noexcept
+	{
+		runtimeAssert(isPositive(rowLength), "rowLength Must Be Positive");
+		runtimeAssert(!isNegative(coord.x) && !isNegative(coord.y),
+			"Point Can't Have Negative Values");
+		runtimeAssert(coord.x < rowLength, "x Can't Be Larger Than rowLength");
+		return coord.x + coord.y * rowLength;
+	}
+
+	template <typename T>
+		requires std::integral<T>
+	[[nodiscard]] constexpr Point<T> indexToCoord(T index, T rowLength) 
+		noexcept
+	{
+		runtimeAssert(isPositive(rowLength), "rowLength Must Be Positive");
+		runtimeAssert(!isNegative(index), "index Can't Be Negative");
+		return Point<T>(index % rowLength, index / rowLength);
 	}
 }

@@ -19,6 +19,23 @@
 
 namespace eqx
 {
+	inline void Log::init(std::ostream* outStream, std::string_view outFile)
+	{
+		runtimeAssert(!s_IsInit, "Init Already Called!");
+		static auto OutFile = std::ofstream();
+		static auto LastMessage = std::string("");
+		s_LogFile = &OutFile;
+		s_LastMessage = &LastMessage;
+		setOutputStream(outStream);
+		setOutputFile(outFile);
+		s_IsInit = true;
+	}
+
+	[[nodiscard]] inline bool Log::isInit() noexcept
+	{
+		return s_IsInit;
+	}
+
 	inline void Log::log(Level level, std::string_view msg,
 		Type type, const std::source_location& loc)
 	{
@@ -27,11 +44,14 @@ namespace eqx
 		{
 			if (s_OutputStream != nullptr)
 			{
-				*s_OutputStream << logString << std::endl;
+				println(logString, *s_OutputStream);
 			}
-			s_LogFile << logString << std::endl;
+			if (s_LogFile->is_open())
+			{
+				println(logString, *s_LogFile);
+			}
 			s_LastErrorType = type;
-			s_LastMessage = msg;
+			*s_LastMessage = msg;
 		}
 	}
 
@@ -40,24 +60,24 @@ namespace eqx
 		s_LogLevel = level;
 	}
 
-	inline void Log::setOutputStream(std::ostream& stream) noexcept
+	inline void Log::setOutputStream(std::ostream* stream) noexcept
 	{
-		s_OutputStream = &stream;
+		s_OutputStream = stream;
 	}
 
 	inline void Log::setOutputFile(std::string_view file)
 	{
-		if (s_LogFile.is_open())
+		if (s_LogFile->is_open())
 		{
-			s_LogFile.close();
+			s_LogFile->close();
 		}
-		s_LogFile.open(file.data(), std::ios::out | std::ios::trunc);
+		s_LogFile->open(file.data(), std::ios::out | std::ios::trunc);
 	}
 
 	inline void Log::clear() noexcept
 	{
 		s_LastErrorType = Log::Type::None;
-		s_LastMessage = "";
+		*s_LastMessage = "";
 	}
 
 	[[nodiscard]] inline Log::Level Log::getCurrentLogLevel() noexcept
@@ -72,48 +92,26 @@ namespace eqx
 
 	[[nodiscard]] inline std::string_view Log::getLastLogMessage() noexcept
 	{
-		return s_LastMessage;
+		return *s_LastMessage;
 	}
 
 	[[nodiscard]] inline std::string 
 		Log::getFormattedString(const std::source_location& loc, Level level,
 			std::string_view msg)
 	{
-		auto result = std::string("");
-		result.reserve(100);
-
-		const auto fileName = std::string_view(loc.file_name());
+		auto fileName = std::string_view(loc.file_name());
+		fileName = fileName.substr(fileName.rfind('\\'));
 		auto functionName = std::string(loc.function_name());
 		auto lineNumber = std::to_string(loc.line());
+		auto levelStr = std::string(LevelToString(level));
+		std::ranges::for_each(levelStr,
+			[](char& val)
+			{
+				val = narrowCast<char>(std::toupper(val));
+			});
 
-		result += "..";
-		result += fileName.substr(fileName.rfind('\\'));
-		result += "(";
-		result += functionName;
-		result += ",";
-		result += lineNumber;
-		result += ") ";
-		switch (level)
-		{
-		case Level::Info:
-			result += "[INFO]: ";
-			break;
-
-		case Level::Warning:
-			result += "[WARNING]: ";
-			break;
-
-		case Level::Error:
-			result += "[ERROR]: ";
-			break;
-
-		default:
-			result += "[UNKNOWN]: ";
-			break;
-		}
-		result += msg;
-
-		return result;
+		return std::format("..{}({},{}) [{}]: {}",
+			fileName, functionName, lineNumber, levelStr, msg);
 	}
 
 	[[nodiscard]] constexpr std::array<Log::Level, 3ULL>

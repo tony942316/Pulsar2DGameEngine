@@ -19,14 +19,10 @@
 
 #ifndef NDEBUG
 
-inline void eqx_debugOnly_runtimeAssert(bool expr,
+constexpr void eqx_debugOnly_runtimeAssert(bool expr,
 	std::string_view msg) noexcept
 {
-	if (!expr)
-	{
-		std::fprintf(stderr, msg.data());
-		std::abort();
-	}
+	eqx::runtimeAssert(expr, msg);
 }
 
 #endif
@@ -38,13 +34,15 @@ namespace eqx
 		return std::string(cstring);
 	}
 
-	template <eqx::stringable T>
+	template <typename T>
+		requires Stringable<T>
 	[[nodiscard]] std::string toString(const T& val)
 	{
 		return std::to_string(val);
 	}
 
-	template <eqx::stringType T>
+	template <typename T>
+		requires StringType<T>
 	[[nodiscard]] std::string toString(const T& val)
 	{
 		return std::string(val);
@@ -53,11 +51,12 @@ namespace eqx
 	template <typename T, typename U>
 	[[nodiscard]] std::string toString(const std::pair<T, U>& val)
 	{
-		return std::string("(" + eqx::toString(val.first) +
-			", " + eqx::toString(val.second) + ")");
+		return std::format("({}, {})", toString(val.first),
+			toString(val.second));
 	}
 
-	template <eqx::constCollection T>
+	template <typename T>
+		requires ConstCollection<T>
 	[[nodiscard]] std::string toString(const T& val)
 	{
 		auto result = std::string("");
@@ -65,7 +64,7 @@ namespace eqx
 		std::ranges::for_each(val,
 			[&result](const auto& x)
 			{
-				result += eqx::toString(x);
+				result += toString(x);
 				result += ", ";
 			});
 		result.pop_back();
@@ -79,14 +78,14 @@ namespace eqx
 		template <typename T, typename U>
 		std::ostream& operator<< (std::ostream& os, std::pair<T, U> p)
 		{
-			return os << eqx::toString(p);
+			return os << toString(p);
 		}
 	}
 
 	template <typename T, typename U>
 	[[nodiscard]] constexpr T narrowCast(U x) noexcept
 	{
-#pragma warning(suppress: 26472)
+		EQX_SUPPRESS_WARNING(26472)
 		return static_cast<T>(x);
 	}
 
@@ -107,21 +106,48 @@ namespace eqx
 		{
 			return narrowCast<unsigned short>(x);
 		}
+
+		constexpr long long operator""_KB (unsigned long long x) noexcept
+		{
+			return x * 1024ULL;
+		}
 	}
 
-	inline void runtimeAssert(bool expr, std::string_view msg) noexcept
+	inline void print(std::string_view msg, std::ostream& out) noexcept
+	{
+		try
+		{
+			out.write(msg.data(), std::ranges::size(msg));
+		}
+		catch (...)
+		{
+			runtimeAssert(false, "Stream Write Exception!");
+		}
+	}
+
+	inline void println(std::string_view msg, std::ostream& out) noexcept
+	{
+		print(msg, out);
+		print("\n", out);
+	}
+
+	constexpr void runtimeAssert(bool expr, std::string_view msg) noexcept
 	{
 		if (!expr)
 		{
+			// If you got here because of a constexpr evaluation
+			// go up the call stack to where this assert was called
+			// and ideally there is a message in the msg parameter
 			std::fprintf(stderr, msg.data());
 			std::abort();
 		}
 	}
 
-	template <eqx::constCollection C1, eqx::constCollection C2>
+	template <typename C1, typename C2>
+		requires ConstCollection<C1> && ConstCollection<C2>
 	[[nodiscard]] auto zip(const C1& x, const C2& y)
 	{
-		eqx::runtimeAssert(std::ranges::size(x) == std::ranges::size(y),
+		runtimeAssert(std::ranges::size(x) == std::ranges::size(y),
 			"eqx::zip std::ranges::size(x) != std::ranges::size(y)!");
 
 		using C1HeldValue =

@@ -73,18 +73,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,13 +105,14 @@
       <AdditionalIncludeDirectories>$(ProjectDir)src\Headers;$(SolutionDir)Extensions\Include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -133,6 +142,7 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
       <TreatWarningAsError>true</TreatWarningAsError>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,7 +151,7 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -168,13 +178,14 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
       <AdditionalIncludeDirectories>$(ProjectDir)src\Headers;$(SolutionDir)Extensions\Include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -204,6 +215,7 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
       <TreatWarningAsError>true</TreatWarningAsError>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -212,7 +224,7 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -229,10 +241,13 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Headers\pul_AccEntity.hpp" />
+    <ClInclude Include="src\Headers\pul_DefHeaders\pul_AccEntityDef.hpp" />
     <ClInclude Include="src\Headers\pul_DefHeaders\pul_EntityDef.hpp" />
     <ClInclude Include="src\Headers\pul_DefHeaders\pul_MouseDef.hpp" />
     <ClInclude Include="src\Headers\pul_DefHeaders\pul_TextureDef.hpp" />
     <ClInclude Include="src\Headers\pul_DefHeaders\pul_WindowDef.hpp" />
+    <ClInclude Include="src\Headers\pul_Dependencies.hpp" />
     <ClInclude Include="src\Headers\pul_Mouse.hpp" />
     <ClInclude Include="src\Headers\pul_Entity.hpp" />
     <ClInclude Include="src\Headers\Pulsar.hpp" />

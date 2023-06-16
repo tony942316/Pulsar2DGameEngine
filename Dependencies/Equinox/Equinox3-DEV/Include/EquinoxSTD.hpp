@@ -27,3 +27,4 @@
 #include "eqx_Point.hpp"
 #include "eqx_Rectangle.hpp"
 #include "eqx_Benchmark.hpp"
+#include "eqx_StaticVector.hpp"

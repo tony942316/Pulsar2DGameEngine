@@ -17,21 +17,20 @@
 
 #pragma once
 
-#include <chrono>
+#include "eqx_Dependencies.hpp"
 
 namespace eqx
 {
-	namespace shortTimeUnits
+	namespace TimeTypes
 	{
-		using tu_ns = std::chrono::nanoseconds;
-		using tu_us = std::chrono::microseconds;
-		using tu_ms = std::chrono::milliseconds;
-		using tu_s = std::chrono::seconds;
+		using t_NS = std::chrono::nanoseconds;
+		using t_US = std::chrono::microseconds;
+		using t_MS = std::chrono::milliseconds;
+		using t_S = std::chrono::seconds;
 	}
 
 	template <typename T>
-	concept timeUnit =
-		std::is_same_v<T, std::chrono::nanoseconds> ||
+	concept TimeUnit = std::is_same_v<T, std::chrono::nanoseconds> ||
 		std::is_same_v<T, std::chrono::microseconds> ||
 		std::is_same_v<T, std::chrono::milliseconds> ||
 		std::is_same_v<T, std::chrono::seconds>;
@@ -70,7 +69,8 @@ namespace eqx
 		 * @returns std::chrono::duration<T> Between The Last this->start() 
 		 *		Call And this->stop Call
 		 */
-		template <timeUnit T = std::chrono::milliseconds>
+		template <typename T = std::chrono::milliseconds>
+			requires TimeUnit<T>
 		[[nodiscard]] T getDuration() const noexcept;
 
 		/**
@@ -80,7 +80,8 @@ namespace eqx
 		 * @returns long long Representing The Milliseconds (Or T) Past Between
 		 *		The Last this->start Call And this->stop Call
 		 */
-		template <timeUnit T = std::chrono::milliseconds>
+		template <typename T = std::chrono::milliseconds>
+			requires TimeUnit<T>
 		[[nodiscard]] long long getTime() const noexcept;
 
 		/**
@@ -89,15 +90,51 @@ namespace eqx
 		 *		this->stop Is Called
 		 *
 		 * @returns long long Representing The Milliseconds (Or T) Past Between
-		 *		The Last this->start Call The Current Time
+		 *		The Last this->start Call And The Current Time
 		 */
-		template <timeUnit T = std::chrono::milliseconds>
+		template <typename T = std::chrono::milliseconds>
+			requires TimeUnit<T>
 		[[nodiscard]] long long readTime() noexcept;
 
+		/**
+		 * @brief Gives Time Past In Seconds With Fine Precision
+		 * 
+		 * @returns double 1500 Milliseconds Would Be 1.5 Seconds
+		 */
+		[[nodiscard]] inline double getSeconds() const noexcept;
+
+		/**
+		 * @brief Calls this->stop Then 
+		 *		Gives Time Past In Seconds With Fine Precision
+		 * 
+		 * @returns double 1500 Milliseconds Would Be 1.5 Seconds
+		 */
+		[[nodiscard]] inline double readSeconds() noexcept;
+
+		/**
+		 * @brief Gives The String Representation Of The Current Duration
+		 * 
+		 * @returns std::string "{TimePast}ms"
+		 */
+		template <typename T = std::chrono::milliseconds>
+			requires TimeUnit<T>
+		[[nodiscard]] std::string toString() const;
+
 	private:
-		std::chrono::time_point<std::chrono::steady_clock> m_StartTime, 
-			m_EndTime;
+		std::chrono::steady_clock::time_point m_StartTime, m_EndTime;
 	};
+
+
+	/**
+	 * @brief Gives The String Representation Of An eqx::StopWatch
+	 * 
+	 * @param watch StopWatch To Process
+	 * 
+	 * @returns std::string "{TimePast}ms"
+	 */
+	template <typename T = std::chrono::milliseconds>
+		requires TimeUnit<T>
+	[[nodiscard]] std::string toString(const StopWatch& watch);
 }
 
 #include "eqx_DefHeaders/eqx_StopWatchDef.hpp"

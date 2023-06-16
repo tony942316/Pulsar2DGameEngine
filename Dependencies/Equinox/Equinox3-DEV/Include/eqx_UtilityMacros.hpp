@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "eqx_Dependencies.hpp"
+
 /**
  * @brief Macro For Use By Other Macros In The UtilityMacros Header, 
  *		NOT FOR EXTERNAL USE!
@@ -139,7 +141,7 @@
  **/
 #define P_EQX_STRING_ARGS_HELPER(x) #x
 /**
- * @breif Macro That Will Parrot Back A const char[n] Of Its Inputs
+ * @brief Macro That Will Parrot Back A const char[n] Of Its Inputs
  *		i.e. EQX_STRING_ARGS(a, b, c) Would Produce "a", "b", "c"
  * 
  * @param ... The Arguments To Be Converted To const char[n]
@@ -150,3 +152,20 @@
  */
 #define EQX_STRING_ARGS(...) \
     EQX_FOR_EACH_LIST(P_EQX_STRING_ARGS_HELPER, __VA_ARGS__)
+
+#ifdef _WIN32
+ /**
+  * @brief Macro That Will Suppress A Warning For One Line
+  *
+  * @param num Warning Number To Suppress
+  */
+#define EQX_SUPPRESS_WARNING(num) __pragma(warning(suppress:num))
+#endif
+#ifdef __GNUC__
+  /**
+   * @brief Macro That Will Suppress A Warning For One Line
+   *
+   * @param num Warning Number To Suppress
+   */
+#define EQX_SUPPRESS_WARNING(num) TBD
+#endif

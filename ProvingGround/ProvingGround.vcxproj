@@ -73,18 +73,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>..\..\VSData\VS-Linter.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -94,7 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(ProjectDir)src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PGpch.hpp</PrecompiledHeaderFile>
@@ -125,7 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(ProjectDir)src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -157,7 +165,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(ProjectDir)src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PGpch.hpp</PrecompiledHeaderFile>
@@ -188,7 +196,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Pulsar2DGameEngine\src\Headers\;$(ProjectDir)src\Headers\;$(SolutionDir)Extensions\Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -222,7 +230,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\PGpch.hpp" />
+    <ClInclude Include="src\Headers\DefHeaders\GameDef.hpp" />
+    <ClInclude Include="src\Headers\Dependencies.hpp" />
+    <ClInclude Include="src\Headers\Game.hpp" />
+    <ClInclude Include="src\Headers\PGpch.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
