@@ -29,6 +29,7 @@ namespace pul
 	inline void AccEntity::update() noexcept
 	{
 		const auto dt = pul::Window::getDeltaTime();
+		EQX_SUPPRESS_WARNING(26820)
 		const auto loc = getDrawBox();
 
 		if (m_MoveTargetReached != eqx::Point<int>(1, 1))

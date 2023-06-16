@@ -32,11 +32,17 @@ namespace pul
 		s_Name = &nameStorage;
 		s_Width = width;
 		s_Height = height;
-		s_EventFunction = [](const SDL_Event& e) { e; };
-		s_UpdateFunction = []() {};
-		s_RenderFunction = []() {};
+		static auto efStore = std::function<void(const SDL_Event & e)>();
+		static auto ufStore = std::function<void()>();
+		static auto rfStore = std::function<void()>();
+		s_EventFunction = &efStore;
+		s_UpdateFunction = &ufStore;
+		s_RenderFunction = &rfStore;
 
 		createWindow();
+		setEventFunction([](const SDL_Event& e) { e; });
+		setUpdateFunction([]() {});
+		setRenderFunction([]() {});
 		s_IsInit = true;
 	}
 
@@ -52,7 +58,7 @@ namespace pul
 
 		using namespace eqx::TimeTypes;
 
-		SDL_Event e;
+		auto e = SDL_Event();
 		auto frameTimer = eqx::StopWatch();
 
 		SDL_ShowWindow(s_Window);
@@ -74,14 +80,14 @@ namespace pul
 				else
 				{
 					Mouse::handleEvent(e);
-					std::invoke(s_EventFunction, e);
+					std::invoke(*s_EventFunction, e);
 				}
 			}
 
-			std::invoke(s_UpdateFunction);
+			std::invoke(*s_UpdateFunction);
 
 			SDL_RenderClear(s_Renderer);
-			std::invoke(s_RenderFunction);
+			std::invoke(*s_RenderFunction);
 			SDL_RenderPresent(s_Renderer);
 
 			s_LastFrameTime = frameTimer.readSeconds();
@@ -142,20 +148,20 @@ namespace pul
 		s_FrameRate = frameRate;
 	}
 
-	inline void Window::setEventFunction(void (*func)(const SDL_Event& e))
-		noexcept
+	inline void Window::setEventFunction(
+		const std::function<void(const SDL_Event& e)>& func)
 	{
-		s_EventFunction = func;
+		*s_EventFunction = func;
 	}
 
-	inline void Window::setUpdateFunction(void (*func)()) noexcept
+	inline void Window::setUpdateFunction(const std::function<void()>& func)
 	{
-		s_UpdateFunction = func;
+		*s_UpdateFunction = func;
 	}
 
-	inline void Window::setRenderFunction(void (*func)()) noexcept
+	inline void Window::setRenderFunction(const std::function<void()>& func)
 	{
-		s_RenderFunction = func;
+		*s_RenderFunction = func;
 	}
 
 	[[nodiscard]] inline int Window::getFrameRate() noexcept

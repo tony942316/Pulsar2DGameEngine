@@ -30,12 +30,14 @@ namespace pul
 
 		static inline void setFrameRate(int frameRate) noexcept;
 
-		static inline void setEventFunction(void (*func)(const SDL_Event& e))
-			noexcept;
+		static inline void setEventFunction(
+			const std::function<void(const SDL_Event& e)>& func);
 
-		static inline void setUpdateFunction(void (*func)()) noexcept; 
+		static inline void 
+			setUpdateFunction(const std::function<void()>& func); 
 
-		static inline void setRenderFunction(void (*func)()) noexcept;
+		static inline void
+			setRenderFunction(const std::function<void()>& func);
 
 		[[nodiscard]] static inline int getFrameRate() noexcept;
 		[[nodiscard]] static inline int getWidth() noexcept;
@@ -54,10 +56,12 @@ namespace pul
 			s_LongestFrame = 0.0, s_TotalTime = 0.0,
 			s_ShortestFrame = std::numeric_limits<double>::max();
 
-		constinit static inline void (*s_EventFunction)(const SDL_Event& e) = 
-			nullptr;
-		constinit static inline void (*s_UpdateFunction)() = nullptr;
-		constinit static inline void (*s_RenderFunction)() = nullptr;
+		constinit static inline auto s_EventFunction =
+			eqx::nullp<std::function<void(const SDL_Event& e)>>;
+		constinit static inline auto s_UpdateFunction =
+			eqx::nullp<std::function<void()>>;
+		constinit static inline auto s_RenderFunction =
+			eqx::nullp<std::function<void()>>;
 
 		constinit static inline auto s_Window = eqx::nullp<SDL_Window>;
 		constinit static inline auto s_Renderer = eqx::nullp<SDL_Renderer>;

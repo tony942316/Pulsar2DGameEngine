@@ -41,6 +41,7 @@ void Game::handleEvent(const SDL_Event& e) noexcept
 
 void Game::update()
 {
+	EQX_SUPPRESS_WARNING(26820);
 	const auto mouse = pul::Mouse::getCurrentLocation();
 
 	s_Mouse.setLocation(mouse - eqx::Point<double>(25.0, 25.0));

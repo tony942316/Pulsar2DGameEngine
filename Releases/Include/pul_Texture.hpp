@@ -75,8 +75,7 @@ namespace pul
 	class Text : public Texture
 	{
 	public:
-		explicit inline 
-			Text(std::string_view text, std::string_view fontPath, 
+		explicit inline Text(std::string_view text, std::string_view fontPath, 
 				int pxHeight);
 
 		inline void loadFont(std::string_view fontPath, int pxHeight) noexcept;

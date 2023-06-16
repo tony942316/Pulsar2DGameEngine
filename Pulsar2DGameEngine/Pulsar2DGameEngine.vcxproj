@@ -116,6 +116,7 @@
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>
@@ -155,6 +156,7 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>
@@ -189,6 +191,7 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>
@@ -228,6 +231,7 @@ Xcopy /E /Y /I $(SolutionDir)Extensions\DLLs\$(Platform)$(Configuration)\ $(Solu
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Extensions\Libs\$(Platform)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <CustomBuildStep>
       <Message>Moving Headers</Message>

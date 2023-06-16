@@ -137,6 +137,7 @@ namespace pul
 		SDL_Surface* surface = IMG_Load(assetPath.data());
 		EQX_SUPPRESS_WARNING(26477);
 		eqx::runtimeAssert(surface != NULL, IMG_GetError());
+		EQX_SUPPRESS_WARNING(6011);
 		m_Width = surface->w;
 		m_Height = surface->h;
 
@@ -177,6 +178,7 @@ namespace pul
 			SDL_Color({ 255, 255, 255 }));
 		EQX_SUPPRESS_WARNING(26477);
 		eqx::runtimeAssert(surface != NULL, TTF_GetError());
+		EQX_SUPPRESS_WARNING(6011);
 		m_Width = surface->w;
 		m_Height = surface->h;
 
