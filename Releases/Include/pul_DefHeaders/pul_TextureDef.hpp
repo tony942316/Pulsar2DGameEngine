@@ -150,15 +150,17 @@ namespace pul
 		SDL_FreeSurface(surface);
 	}
 
-	inline Text::Text(std::string_view text, std::string_view fontPath)
+	inline Text::Text(std::string_view text, std::string_view fontPath,
+		int pxHeight)
 		:
 		Texture(),
 		m_Text(text)
 	{
-		loadFont(fontPath);
+		loadFont(fontPath, pxHeight);
 	}
 
-	inline void Text::loadFont(std::string_view fontPath) noexcept
+	inline void Text::loadFont(std::string_view fontPath, int pxHeight) 
+		noexcept
 	{
 		m_Renderer = pul::Window::getRenderer();
 
@@ -167,7 +169,7 @@ namespace pul
 			SDL_DestroyTexture(m_SdlTexture);
 		}
 
-		TTF_Font* font = TTF_OpenFont(fontPath.data(), 100);
+		TTF_Font* font = TTF_OpenFont(fontPath.data(), pxHeight);
 		EQX_SUPPRESS_WARNING(26477);
 		eqx::runtimeAssert(font != NULL, TTF_GetError());
 

@@ -26,7 +26,9 @@ private:
 		s_Unit = pul::AccEntity(s_EnemyTexture), 
 		s_Blade = pul::AccEntity(s_FlexTexture);
 
-	constinit static inline auto s_Text = eqx::nullp<pul::Text>;
+	constinit static inline auto s_Sans = eqx::nullp<pul::Text>;
+	constinit static inline auto s_Poppins = eqx::nullp<pul::Text>;
+	constinit static inline auto s_Kablammo = eqx::nullp<pul::Text>;
 };
 
 #include "DefHeaders/GameDef.hpp"

@@ -76,9 +76,10 @@ namespace pul
 	{
 	public:
 		explicit inline 
-			Text(std::string_view text, std::string_view fontPath);
+			Text(std::string_view text, std::string_view fontPath, 
+				int pxHeight);
 
-		inline void loadFont(std::string_view fontPath) noexcept;
+		inline void loadFont(std::string_view fontPath, int pxHeight) noexcept;
 
 	private:
 		std::string m_Text;
